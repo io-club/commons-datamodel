@@ -1,8 +1,9 @@
 package fyi.ioclub.commons.array.join
 
+@SuppressWarnings("unchecked")
 fun <T> join(
     clazz: Class<T>, src1: Array<T>, off1: Int, len1: Int, src2: Array<T>, off2: Int, len2: Int
-) = (java.lang.reflect.Array.newInstance(clazz, len1 + len2) as Array<*>).also {
+) = (java.lang.reflect.Array.newInstance(clazz, len1 + len2) as Array<T>).also {
     System.arraycopy(src1, off1, it, 0, len1)
     System.arraycopy(src2, off2, it, len1, len2)
 }
