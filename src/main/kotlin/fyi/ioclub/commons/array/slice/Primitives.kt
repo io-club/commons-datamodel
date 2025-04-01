@@ -38,6 +38,39 @@ fun arraySliceOf(array: IntArray) = arraySliceOf(array, 0, array.size)
 fun arraySliceOf(array: LongArray) = arraySliceOf(array, 0, array.size)
 fun arraySliceOf(array: ShortArray) = arraySliceOf(array, 0, array.size)
 
+fun arraySliceOf(arraySlice: BooleanArraySlice): BooleanArraySlice = arraySlice
+fun arraySliceOf(arraySlice: ByteArraySlice): ByteArraySlice = arraySlice
+fun arraySliceOf(arraySlice: CharArraySlice): CharArraySlice = arraySlice
+fun arraySliceOf(arraySlice: DoubleArraySlice): DoubleArraySlice = arraySlice
+fun arraySliceOf(arraySlice: FloatArraySlice): FloatArraySlice = arraySlice
+fun arraySliceOf(arraySlice: IntArraySlice): IntArraySlice = arraySlice
+fun arraySliceOf(arraySlice: LongArraySlice): LongArraySlice = arraySlice
+fun arraySliceOf(arraySlice: ShortArraySlice): ShortArraySlice = arraySlice
+
+fun arraySliceOf(arraySlice: BooleanArraySlice, offset: Int, length: Int): BooleanArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: ByteArraySlice, offset: Int, length: Int): ByteArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: CharArraySlice, offset: Int, length: Int): CharArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: DoubleArraySlice, offset: Int, length: Int): DoubleArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: FloatArraySlice, offset: Int, length: Int): FloatArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: IntArraySlice, offset: Int, length: Int): IntArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: LongArraySlice, offset: Int, length: Int): LongArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
+fun arraySliceOf(arraySlice: ShortArraySlice, offset: Int, length: Int): ShortArraySlice =
+    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+
 // Implements
 
 private class BooleanArraySliceImpl(
