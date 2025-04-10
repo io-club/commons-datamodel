@@ -35,7 +35,9 @@ fun <Q> fromQmParted(query: List<Q>, modification: ListMod<Q>): MutableList<Q> =
     object : MutableList<Q>, List<Q> by query, ListMod<Q> by modification {
         override fun iterator() = fromQmPartedIterator(query, modification)
         override fun listIterator() = fromQmParted(query.listIterator(), modification.listIteratorMod())
-        override fun listIterator(index: Int) = fromQmParted(query.listIterator(index), modification.listIteratorMod(index))
+        override fun listIterator(index: Int) =
+            fromQmParted(query.listIterator(index), modification.listIteratorMod(index))
+
         override fun subList(fromIndex: Int, toIndex: Int) =
             fromQmParted(query.subList(fromIndex, toIndex), modification.subListMod(fromIndex, toIndex))
     }
