@@ -18,65 +18,48 @@ package fyi.ioclub.commons.collection.qmparted
 
 // Iterators
 
-fun <Q> fromQmParted(query: Iterator<Q>, modification: MutableIterator<Q>) =
-    fromQmParted(query, modDelegateTo(modification))
-
 fun <Q> fromQmParted(query: Iterator<Q>, modification: IteratorMod.DelegateLesser) =
     fromQmParted(query, modDelegateTo(modification))
 
-fun <I, O : I> fromQmParted(
-    subtype: MutableListIterator<O>, modification: MutableListIterator<I>,
-): MutableListIterator<I> = fromQmParted(subtype, inModDelegateTo(modification))
+fun <Q> fromQmParted(query: Iterator<Q>, modification: MutableIterator<Q>) =
+    fromQmParted(query, modDelegateTo(modification))
 
 fun <I, O : I> fromQmParted(
     subtype: MutableListIterator<O>, modification: SubtypeListIteratorInMod.DelegateLesser<I>,
 ): MutableListIterator<I> = fromQmParted(subtype, inModDelegateTo(modification))
 
-fun <Q> fromQmParted(query: ListIterator<Q>, modification: MutableListIterator<Q>) =
+fun <Q> fromQmParted(query: ListIterator<Q>, modification: ListIteratorMod.DelegateLesser<Q>) =
     fromQmParted(query, modDelegateTo(modification))
 
-fun <Q> fromQmParted(query: ListIterator<Q>, modification: ListIteratorMod.DelegateLesser<Q>) =
+fun <Q> fromQmParted(query: ListIterator<Q>, modification: MutableListIterator<Q>) =
     fromQmParted(query, modDelegateTo(modification))
 
 // Collections
 
 fun <I, O : I> fromQmParted(
-    subtype: MutableCollection<O>,
-    modification: MutableCollection<I>,
-): MutableCollection<I> = fromQmParted(subtype, inModDelegateTo(modification))
-
-fun <I, O : I> fromQmParted(
     subtype: MutableCollection<O>, modification: SubtypeCollectionInMod.DelegateLesser<I>,
 ): MutableCollection<I> = fromQmParted(subtype, inModDelegateTo(modification))
-
-fun <Q> fromQmParted(query: Collection<Q>, modification: MutableCollection<Q>) =
-    fromQmParted(query, modDelegateTo(modification))
 
 fun <Q> fromQmParted(query: Collection<Q>, modification: CollectionMod.DelegateLesser<Q>) =
     fromQmParted(query, modDelegateTo(modification))
 
-fun <I, O : I> fromQmParted(
-    subtype: MutableList<O>, modification: MutableList<I>,
-): MutableList<I> = fromQmParted(subtype, inModDelegateTo(modification))
+fun <Q> fromQmParted(query: Collection<Q>, modification: MutableCollection<Q>) =
+    fromQmParted(query, modDelegateTo(modification))
 
 fun <I, O : I> fromQmParted(
     subtype: MutableList<O>, modification: SubtypeListInMod.DelegateLesser<I>,
 ): MutableList<I> = fromQmParted(subtype, inModDelegateTo(modification))
 
-fun <Q> fromQmParted(query: List<Q>, modification: MutableList<Q>) = fromQmParted(query, modDelegateTo(modification))
-
 fun <Q> fromQmParted(query: List<Q>, modification: ListMod.DelegateLesser<Q>) =
     fromQmParted(query, modDelegateTo(modification))
 
-fun <I, O : I> fromQmParted(
-    subtype: MutableSet<O>, modification: MutableSet<I>,
-): MutableSet<I> = fromQmParted(subtype, inModDelegateTo(modification))
+fun <Q> fromQmParted(query: List<Q>, modification: MutableList<Q>) = fromQmParted(query, modDelegateTo(modification))
 
 fun <I, O : I> fromQmParted(
     subtype: MutableSet<O>, modification: SubtypeSetInMod.DelegateLesser<I>,
 ): MutableSet<I> = fromQmParted(subtype, inModDelegateTo(modification))
 
-fun <Q> fromQmParted(query: Set<Q>, modification: MutableSet<Q>) = fromQmParted(query, modDelegateTo(modification))
-
 fun <Q> fromQmParted(query: Set<Q>, modification: SetMod.DelegateLesser<Q>) =
     fromQmParted(query, modDelegateTo(modification))
+
+fun <Q> fromQmParted(query: Set<Q>, modification: MutableSet<Q>) = fromQmParted(query, modDelegateTo(modification))
