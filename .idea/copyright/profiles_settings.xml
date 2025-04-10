@@ -1,7 +1,3 @@
 <component name="CopyrightManager">
-  <settings>
-    <module2copyright>
-      <element module="All" copyright="IOClub under MIT" />
-    </module2copyright>
-  </settings>
+  <settings default="IO-Club under MIT" />
 </component>

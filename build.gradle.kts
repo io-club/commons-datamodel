@@ -10,10 +10,11 @@
 
 plugins {
     kotlin("jvm") version "2.1.0"
+    `maven-publish`
 }
 
 group = "fyi.ioclub"
-version = "1.0-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public") }
@@ -29,4 +30,11 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(17)
+}
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+        }
+    }
 }
