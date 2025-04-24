@@ -2,6 +2,10 @@
 
 IO-Club Commons Datamodel
 
+Usage:
+
+Gradle - publishToMavenLocal
+
 ## `.array`
 
 ## `.collection`

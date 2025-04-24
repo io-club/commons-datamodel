@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "fyi.ioclub"
-version = "1.3.1-SNAPSHOT"
+version = "2.0.0-SNAPSHOT"
 
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public") }
@@ -28,6 +28,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains:annotations:26.0.2")
     testImplementation(kotlin("test"))
 }
 
@@ -37,10 +38,22 @@ tasks.test {
 kotlin {
     jvmToolchain(17)
 }
+val sourcesJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.main.get().allSource)
+}
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
+
+            artifact(sourcesJar.get())
+
+            val javadocJar by tasks.registering(Jar::class) {
+                archiveClassifier.set("javadoc")
+                from(tasks.javadoc)
+            }
+            artifact(javadocJar.get())
         }
     }
 }
