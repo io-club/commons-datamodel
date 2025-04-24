@@ -1,2 +1,2 @@
-IO-Club Commons Collection
+IO-Club Commons Datamodel
 Copyright 2025 IO Club

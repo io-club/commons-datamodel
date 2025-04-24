@@ -10,7 +10,9 @@
 
 package fyi.ioclub.commons.array.join
 
-import fyi.ioclub.commons.array.slice.simplified.get
+import fyi.ioclub.commons.datamodel.array.slice.simplified.get
+import fyi.ioclub.commons.datamodel.array.join.join
+import fyi.ioclub.commons.datamodel.array.join.plus
 
 fun testByteArrayJoining() {
     val arr1 = "array1".encodeToByteArray()

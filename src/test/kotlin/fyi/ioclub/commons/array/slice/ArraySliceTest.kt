@@ -10,7 +10,9 @@
 
 package fyi.ioclub.commons.array.slice
 
-import fyi.ioclub.commons.array.slice.simplified.get
+import fyi.ioclub.commons.datamodel.array.slice.simplified.get
+import fyi.ioclub.commons.datamodel.array.slice.getArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.toTriple
 import java.nio.ByteBuffer
 
 fun testByteArraySlice() {

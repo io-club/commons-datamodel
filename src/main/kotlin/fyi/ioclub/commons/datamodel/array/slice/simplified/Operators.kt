@@ -8,9 +8,18 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package fyi.ioclub.commons.array.slice.simplified
+package fyi.ioclub.commons.datamodel.array.slice.simplified
 
-import fyi.ioclub.commons.array.slice.*
+import fyi.ioclub.commons.datamodel.array.slice.ArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.BooleanArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.ByteArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.CharArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.DoubleArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.FloatArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.IntArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.LongArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.ShortArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.arraySliceOf
 
 operator fun <T> Array<T>.get(offset: Int, length: Int) = arraySliceOf(this, offset, length)
 
