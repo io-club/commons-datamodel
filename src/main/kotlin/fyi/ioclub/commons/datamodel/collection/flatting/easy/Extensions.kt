@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.collection.flatting.easy
+package fyi.ioclub.commons.datamodel.collection.flatting.easy
 
-import fyi.ioclub.commons.collection.flatting.flatten
+import fyi.ioclub.commons.datamodel.collection.flatting.flatten
 
 operator fun <T> T.plus(other: Iterable<T>) = listOf(listOf(this), other).flatten()
 operator fun <T> Iterable<T>.plus(other: T) = listOf(this, listOf(other)).flatten()

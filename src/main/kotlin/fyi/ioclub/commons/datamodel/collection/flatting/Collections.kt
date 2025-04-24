@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.collection.flatting
+package fyi.ioclub.commons.datamodel.collection.flatting
 
 open class FlattenedIterable<out E>(protected open val nestedBases: Iterable<Iterable<E>>) : Iterable<E> {
 

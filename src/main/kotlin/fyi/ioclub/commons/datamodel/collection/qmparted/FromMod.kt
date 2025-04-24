@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.collection.qmparted
+package fyi.ioclub.commons.datamodel.collection.qmparted
 
 // Iterators
 

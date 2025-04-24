@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.collection.deriving
+package fyi.ioclub.commons.datamodel.collection.deriving
 
 open class DerivingIterator<T, R>(
     protected open val mutableBase: MutableIterator<T>,

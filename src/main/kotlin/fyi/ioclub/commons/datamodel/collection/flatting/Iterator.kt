@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.collection.flatting
+package fyi.ioclub.commons.datamodel.collection.flatting
 
-fun <T> Iterable<Iterable<T>>.flatten(): Iterable<T> = let(::FlattenedIterable)
-fun <T> Collection<Collection<T>>.flatten(): Collection<T> = let(::FlattenedCollection)
-fun <T> List<List<T>>.flatten(): List<T> = let(::FlattenedList)
+open class FlattenIterator<out E>(protected open val nestedBases: Iterator<Iterator<E>>) : Iterator<E> {
 
-operator fun <T> Iterable<T>.plus(other: Iterable<T>) = listOf(this, other).flatten()
-operator fun <T> Collection<T>.plus(other: Collection<T>) = listOf(this, other).flatten()
-operator fun <T> List<T>.plus(other: List<T>) = listOf(this, other).flatten()
+    private var itr: Iterator<@UnsafeVariance E>? = nestedBases.run { if (hasNext()) next() else null }
+
+    override fun next(): E {
+        val itr = itr ?: nestedBases.next().also { itr = it }
+        return if (itr.hasNext()) itr.next()
+        else {
+            this.itr = null
+            next()
+        }
+    }
+
+    override fun hasNext() = itr?.hasNext() == true
+}
