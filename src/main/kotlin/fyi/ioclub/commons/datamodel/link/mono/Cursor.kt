@@ -23,7 +23,7 @@ import fyi.ioclub.commons.datamodel.container.setValue
 typealias MonoLinkedNodeCursor<T> = Container.Mutable<MonoLinkedNode<T>>
 
 /** Create a mutable cursor of linked node. */
-fun <T> cursorOf(node: MonoLinkedNode<T> = MonoLinkedBreaker()): MonoLinkedNodeCursor<T> = Container.Mutable.of(node)
+fun <T> cursorOf(node: MonoLinkedNode<T> = MonoLinkedBreaker): MonoLinkedNodeCursor<T> = Container.Mutable.of(node)
 
 /** Create an empty cursor. */
 fun <T> emptyCursor(): MonoLinkedNodeCursor<T> = Container.Mutable.empty()
@@ -69,7 +69,7 @@ interface AdderNext<T> {
 fun <T> MonoLinkedNodeCursor<T>.followAddingNext() = object : AdderNext<T> {
     private var curr by this@followAddingNext
 
-    override fun addNext(container: Container<T>) = container.monoLinkTo(MonoLinkedBreaker()).let { next ->
+    override fun addNext(container: Container<T>) = container.monoLinkTo(MonoLinkedBreaker).let { next ->
         curr.linkNext(next).also {
             curr = it
         }

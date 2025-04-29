@@ -59,7 +59,7 @@ class MonoLinkedNodeTest {
     fun toMutableDeep() {
         linkNext()
         n0.toMutableDeep()
-        (n0.next.next.next.next.next as MonoLinkedNode.LinkMutable<*>).next = MonoLinkedBreaker()
+        (n0.next.next.next.next.next as MonoLinkedNode.LinkMutable<*>).next = MonoLinkedBreaker
         println(n0.toIterable().toList())
     }
 }

@@ -26,13 +26,13 @@ class CursorTest {
     @Test
     fun testCursorOf() {
         val c = cursorOf<Int>()
-        c.item = monoLinkedNodeOf(1, MonoLinkedBreaker())
+        c.item = monoLinkedNodeOf(1, MonoLinkedBreaker)
         println(c.item)
     }
 
     @Test
     fun followIteration() {
-        val c = cursorOf(monoLinkedNodeOf(1, MonoLinkedBreaker()))
+        val c = cursorOf(monoLinkedNodeOf(1, MonoLinkedBreaker))
         println(c.item)
         c.followIteration().next()
         println(c.item)

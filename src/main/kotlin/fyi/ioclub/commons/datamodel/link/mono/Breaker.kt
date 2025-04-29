@@ -24,11 +24,9 @@ object MonoLinkedBreaker : MonoLinkedNode<Nothing>, Container<Nothing> by Contai
     override val next get() = throw NoSuchElementException()
 
     override fun toString() = "${this::class.simpleName}"
-
-    operator fun <T> invoke() = this as MonoLinkedNode<T>
 }
 
 val MonoLinkedNode<*>.isBreaker get() = this === MonoLinkedBreaker
 val MonoLinkedNode<*>.isNotBreaker get() = this !== MonoLinkedBreaker
 
-fun <T> Container<T>.monoLinkToBreaker(): MonoLinkedNode.LinkMutable<T> = monoLinkTo(MonoLinkedBreaker())
+fun <T> Container<T>.monoLinkToBreaker(): MonoLinkedNode.LinkMutable<T> = monoLinkTo(MonoLinkedBreaker)
