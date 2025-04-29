@@ -17,13 +17,6 @@
 package fyi.ioclub.commons.datamodel.link.mono
 
 import fyi.ioclub.commons.datamodel.container.Container
-import fyi.ioclub.commons.datamodel.link.mono.MonoLinkedBreaker
-import fyi.ioclub.commons.datamodel.link.mono.MonoLinkedNode
-import fyi.ioclub.commons.datamodel.link.mono.linkNext
-import fyi.ioclub.commons.datamodel.link.mono.monoLinkTo
-import fyi.ioclub.commons.datamodel.link.mono.toIterable
-import fyi.ioclub.commons.datamodel.link.mono.toMutable
-import fyi.ioclub.commons.datamodel.link.mono.toMutableDeep
 import org.junit.jupiter.api.Test
 
 internal fun <T> monoLinkedNodeOf(item: T, next: MonoLinkedNode<T>? = null) = Container.of(item).monoLinkTo(next)
@@ -61,5 +54,11 @@ class MonoLinkedNodeTest {
         n0.toMutableDeep()
         (n0.next.next.next.next.next as MonoLinkedNode.LinkMutable<*>).next = MonoLinkedBreaker
         println(n0.toIterable().toList())
+    }
+
+    @Test
+    fun testIsBreaker() {
+        val b = MonoLinkedBreaker
+        println(b.isBreaker)
     }
 }
