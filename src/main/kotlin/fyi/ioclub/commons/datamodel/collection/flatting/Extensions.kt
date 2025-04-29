@@ -14,19 +14,12 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.datamodel.link.mono
+package fyi.ioclub.commons.datamodel.collection.flatting
 
-import fyi.ioclub.commons.datamodel.container.Container
-import org.junit.jupiter.api.Test
+fun <T> Iterable<Iterable<T>>.flatten(): Iterable<T> = let(::FlattenedIterable)
+fun <T> Collection<Collection<T>>.flatten(): Collection<T> = let(::FlattenedCollection)
+fun <T> List<List<T>>.flatten(): List<T> = let(::FlattenedList)
 
-class NodeTest {
-
-    @Test
-    fun linkNext() {
-        val n = Container.Mutable.of(0).monoLinkTo(null)
-        val next1 = n.next
-        n.linkNext(n)
-        val next2 = n.next
-        assert(next1 === next2)
-    }
-}
+operator fun <T> Iterable<T>.plus(other: Iterable<T>) = listOf(this, other).flatten()
+operator fun <T> Collection<T>.plus(other: Collection<T>) = listOf(this, other).flatten()
+operator fun <T> List<T>.plus(other: List<T>) = listOf(this, other).flatten()
