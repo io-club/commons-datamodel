@@ -66,6 +66,8 @@ interface Container<out T> {
 
     companion object {
 
+        fun <T> empty() = Empty
+
         fun <T> of(item: T) = object : Container<T> {
             override val item = item
             override fun toString() = "ImmutableContainer(item=$item)"
@@ -86,7 +88,7 @@ interface Container<out T> {
             override fun toString() = "ImmutableContainer(lazy=$lazy)"
         }
 
-        fun <T> empty() = Empty
+        fun <T> ofLazy(initializer: () -> T) = ofLazy(lazy(initializer))
     }
 
     object Empty : Container<Nothing> {

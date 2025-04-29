@@ -33,7 +33,7 @@ interface MonoLinkedNode<out T> : Container<T> {
 /** @param next if `null` then link to node itself. */
 fun <T> Container<T>.monoLinkTo(next: MonoLinkedNode<T>?): MonoLinkedNode.LinkMutable<T> =
     object : MonoLinkedNode.LinkMutable<T>, MLNodeImplBase<T>(this) {
-        override var next: MonoLinkedNode<T> = next ?: this
+        override var next = next ?: this
     }
 
 /** @param nextContainer container of next node. */
