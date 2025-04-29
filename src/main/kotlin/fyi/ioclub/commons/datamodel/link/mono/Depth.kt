@@ -33,8 +33,8 @@ fun <T> MonoLinkedNode.LinkMutable<T>.listenDepth(depthContainer: Container.Muta
 private class LinkMutableDepthListeningDelegate<T>(
     override val node: MonoLinkedNode.LinkMutable<T>,
     depthContainer: Container.Mutable<Depth>,
-) :
-    MonoLinkedNode.LinkMutable<T>, DepthListeningDelegate<T>(node, depthContainer) {
+) : MonoLinkedNode.LinkMutable<T>, DepthListeningDelegate<T>(node, depthContainer) {
+
     override var next: MonoLinkedNode<T>
         get() = super.next
         set(value) = value.let(node::next::set)
@@ -44,7 +44,9 @@ private open class DepthListeningDelegate<T>(
     protected open val node: MonoLinkedNode<T>,
     private val depthContainer: Container.Mutable<Depth>,
 ) : MonoLinkedNode<T> {
-    final override val item: T get() = node.item
+
+    final override val item get() = node.item
+
     override val next: MonoLinkedNode<T>
         get() {
             depthContainer.item++

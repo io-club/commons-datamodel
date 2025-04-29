@@ -76,18 +76,22 @@ interface Container<out T> {
             override fun toString() = "ImmutableContainer(property=$property)"
         }
 
-        fun <T> ofGetter(getter: () -> T) = ofProperty { _, _ -> getter() }
-
-        fun <T> empty() = object : Container<T> {
-            override val item get() = throw NoSuchElementException(MSG_EMPTY)
-            override fun toString() = "EmptyContainer()"
+        fun <T> ofGetter(getter: () -> T) = object : Container<T> {
+            override val item get() = getter()
+            override fun toString() = "ImmutableContainer(getter=$getter)"
         }
+
+        fun <T> ofLazy(lazy: Lazy<T>) = object : Container<T> {
+            override val item by lazy
+            override fun toString() = "ImmutableContainer(lazy=$lazy)"
+        }
+
+        fun <T> empty() = Empty
     }
 
     object Empty : Container<Nothing> {
         override val item get() = throw NoSuchElementException(MSG_EMPTY)
         override fun toString() = "EmptyImmutableContainer()"
-        operator fun <T> invoke() = this as Container<T>
     }
 
 }

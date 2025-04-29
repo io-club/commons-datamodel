@@ -19,7 +19,10 @@ package fyi.ioclub.commons.datamodel.link.mono
 import fyi.ioclub.commons.datamodel.container.Container
 
 /** Multipurpose placeholder. The reason why [MonoLinkedNode.next] not nullable. */
-object MonoLinkedBreaker : MonoLinkedNode<Nothing>, Container<Nothing> by Container.Companion.empty() {
+object MonoLinkedBreaker : MonoLinkedNode<Nothing> {
+
+    /** Delegates to [Container.Empty].*/
+    override val item get() = Container.Empty.item
 
     override val next get() = throw NoSuchElementException()
 
@@ -29,4 +32,4 @@ object MonoLinkedBreaker : MonoLinkedNode<Nothing>, Container<Nothing> by Contai
 val MonoLinkedNode<*>.isBreaker get() = this === MonoLinkedBreaker
 val MonoLinkedNode<*>.isNotBreaker get() = this !== MonoLinkedBreaker
 
-fun <T> Container<T>.monoLinkToBreaker(): MonoLinkedNode.LinkMutable<T> = monoLinkTo(MonoLinkedBreaker)
+fun <T> Container<T>.monoLinkToBreaker() = monoLinkTo(MonoLinkedBreaker as MonoLinkedNode<T>)

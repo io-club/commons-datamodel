@@ -18,6 +18,7 @@ package fyi.ioclub.commons.datamodel.link.mono
 
 import fyi.ioclub.commons.datamodel.container.Container
 import fyi.ioclub.commons.datamodel.container.getValue
+import fyi.ioclub.commons.datamodel.container.setValue
 
 interface MonoLinkedNode<out T> : Container<T> {
 
@@ -30,14 +31,25 @@ interface MonoLinkedNode<out T> : Container<T> {
 }
 
 /** @param next if `null` then link to node itself. */
-fun <T> Container<T>.monoLinkTo(next: MonoLinkedNode<T>?): MonoLinkedNode.LinkMutable<T> = MLNodeImpl(this, next)
+fun <T> Container<T>.monoLinkTo(next: MonoLinkedNode<T>?): MonoLinkedNode.LinkMutable<T> =
+    object : MonoLinkedNode.LinkMutable<T>, MLNodeImplBase<T>(this) {
+        override var next: MonoLinkedNode<T> = next ?: this
+    }
 
-private class MLNodeImpl<T>(
-    container: Container<T>,
-    next: MonoLinkedNode<T>?,
-) : MonoLinkedNode.LinkMutable<T> {
-    override val item by container
-    override var next: MonoLinkedNode<T> = next ?: this
+/** @param nextContainer container of next node. */
+fun <T> Container<T>.monoLinkTo(nextContainer: Container.Mutable<MonoLinkedNode<T>>): MonoLinkedNode.LinkMutable<T> =
+    object : MonoLinkedNode.LinkMutable<T>, MLNodeImplBase<T>(this) {
+        override var next by nextContainer
+    }
+
+/** @param nextContainer container of next node. */
+fun <T> Container<T>.monoLinkTo(nextContainer: Container<MonoLinkedNode<T>>): MonoLinkedNode<T> =
+    object : MonoLinkedNode<T>, MLNodeImplBase<T>(this) {
+        override val next by nextContainer
+    }
+
+private abstract class MLNodeImplBase<out T>(container: Container<T>) : MonoLinkedNode<T> {
+    final override val item by container
 }
 
 /**
@@ -48,6 +60,7 @@ private class MLNodeImpl<T>(
 fun <T> MonoLinkedNode<T>.linkNext(other: MonoLinkedNode<T>): MonoLinkedNode<T> =
     if (this is MonoLinkedNode.LinkMutable) linkNext(other)
     else throw IllegalStateException("Failed to extend: node link immutable")
+
 fun <T> MonoLinkedNode<T>.linkNext(other: MonoLinkedNode.LinkMutable<T>) =
     linkNext(other as MonoLinkedNode<T>) as MonoLinkedNode.LinkMutable
 

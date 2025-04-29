@@ -69,7 +69,7 @@ interface AdderNext<T> {
 fun <T> MonoLinkedNodeCursor<T>.followAddingNext() = object : AdderNext<T> {
     private var curr by this@followAddingNext
 
-    override fun addNext(container: Container<T>) = container.monoLinkTo(MonoLinkedBreaker).let { next ->
+    override fun addNext(container: Container<T>) = container.monoLinkToBreaker().let { next ->
         curr.linkNext(next).also {
             curr = it
         }
