@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.datamodel.array.slice.simplified
+package fyi.ioclub.commons.datamodel.array.slice.easy
 
 import fyi.ioclub.commons.datamodel.array.slice.ArraySlice
 import fyi.ioclub.commons.datamodel.array.slice.BooleanArraySlice

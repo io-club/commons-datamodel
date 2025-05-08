@@ -16,7 +16,11 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
-sealed interface ArraySliceProtocol<A> {
+/** @param A subtype of [Any] which interprets to [Object] for [System.arraycopy].
+ * In implementations of this sealed interface,
+ * it must be [Array] or one of the primitive type array types like [ByteArray].
+ */
+sealed interface ArraySliceProtocol<out A: Any> {
 
     val array: A
     val offset: Int
@@ -25,7 +29,7 @@ sealed interface ArraySliceProtocol<A> {
     fun sliced(): A
 }
 
-fun <A> ArraySliceProtocol<A>.toTriple(): Triple<A, Int, Int> = Triple(array, offset, length)
+fun <A : Any> ArraySliceProtocol<A>.toTriple(): Triple<A, Int, Int> = Triple(array, offset, length)
 
 interface ArraySlice<T> : ArraySliceProtocol<Array<T>>
 

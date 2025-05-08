@@ -16,7 +16,7 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
-import fyi.ioclub.commons.datamodel.array.slice.simplified.get
+import fyi.ioclub.commons.datamodel.array.slice.easy.get
 import java.nio.ByteBuffer
 
 fun testByteArraySlice() {

@@ -16,7 +16,7 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
-sealed interface PrimitiveArraySlice<A> : ArraySliceProtocol<A>
+sealed interface PrimitiveArraySlice<out A: Any> : ArraySliceProtocol<A>
 
 interface BooleanArraySlice : PrimitiveArraySlice<BooleanArray>
 interface ByteArraySlice : PrimitiveArraySlice<ByteArray>

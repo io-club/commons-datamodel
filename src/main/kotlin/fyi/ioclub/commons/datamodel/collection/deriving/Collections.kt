@@ -29,20 +29,33 @@ open class DerivingIterable<T, R>(
 
     override fun iterator(): MutableIterator<T> =
         DerivingIterator(mutableBase.iterator(), mutableDerived.iterator(), transform)
+
+    override fun equals(other: Any?) =
+        this === other || other is DerivingIterable<*, *> && (transform to base) == other.run { transform to base }
+
+    override fun hashCode() = (transform to base).hashCode()
+
+    override fun toString() = "${this::class.simpleName} from $mutableBase to $mutableDerived"
 }
 
 open class DerivingCollection<T, R>(
     override val mutableBase: MutableCollection<T>,
     override val mutableDerived: MutableCollection<R>,
     transform: (T) -> R,
-) : MutableCollection<T>, Collection<T> by mutableBase, DerivingIterable<T, R>(mutableBase, mutableDerived, transform) {
+) : MutableCollection<T>, DerivingIterable<T, R>(mutableBase, mutableDerived, transform) {
 
     override val base: Collection<T> get() = mutableBase
     override val derived: Collection<R> get() = mutableDerived
 
     // Query Operations
 
-    override fun iterator() = super.iterator()
+    override val size get() = mutableBase.size
+    override fun isEmpty() = mutableBase.isEmpty()
+    override operator fun contains(element: T) = element in mutableBase
+
+    // Bulk Operations
+
+    override fun containsAll(elements: Collection<T>) = mutableBase.containsAll(elements)
 
     // Modification Operations
 
