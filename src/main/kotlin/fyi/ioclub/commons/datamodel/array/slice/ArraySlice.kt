@@ -16,16 +16,29 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
-/** @param A subtype of [Any] which interprets to [Object] for [System.arraycopy].
+import org.jetbrains.annotations.Range
+
+/**
+ * Array slice base interface.
+ * Compatible with generic arrays [Array]
+ * and primitive type arrays like [ByteArray].
+ *
+ * @param A subtype of [Any] which interprets to [Object] for [System.arraycopy].
  * In implementations of this sealed interface,
  * it must be [Array] or one of the primitive type array types like [ByteArray].
+ *
+ * @see ArraySlice
+ * @see PrimitiveArraySlice
  */
-sealed interface ArraySliceProtocol<out A: Any> {
+sealed interface ArraySliceProtocol<out A : Any> {
 
     val array: A
-    val offset: Int
-    val length: Int
 
+    val offset: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int
+
+    val length: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int
+
+    /** Returns an array of data sliced from [array], from position [offset] and of length [length]. */
     fun sliced(): A
 }
 
