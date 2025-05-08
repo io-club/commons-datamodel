@@ -46,17 +46,21 @@ fun <A : Any> ArraySliceProtocol<A>.toTriple(): Triple<A, Int, Int> = Triple(arr
 
 interface ArraySlice<T> : ArraySliceProtocol<Array<T>>
 
-fun <T> arraySliceOf(array: Array<T>, offset: Int, length: Int): ArraySlice<T> = ArraySliceImpl(array, offset, length)
 fun <T> arraySliceOf(array: Array<T>): ArraySlice<T> = arraySliceOf(array, 0, array.size)
-fun <T> arraySliceOf(arraySlice: ArraySlice<T>): ArraySlice<T> = arraySlice
-fun <T> arraySliceOf(arraySlice: ArraySlice<T>, offset: Int, length: Int): ArraySlice<T> =
-    arraySliceOf(arraySlice.array, arraySlice.offset + offset, length)
+fun <T> arraySliceOf(array: Array<T>, offset: Int, length: Int): ArraySlice<T> {
+    checkIndexBounds(array.size, offset, length)
+    return ArraySliceImpl(array, offset, length)
+}
 
-private class ArraySliceImpl<T>(override val array: Array<T>, override val offset: Int, override val length: Int) :
-    ArraySlice<T> {
-    init {
-        checkIndexBounds(array.size, offset, length)
-    }
+fun <T> arraySliceOf(arraySlice: ArraySlice<T>): ArraySlice<T> = arraySlice
+fun <T> arraySliceOf(arraySlice: ArraySlice<T>, offset: Int, length: Int): ArraySlice<T> {
+    checkIndexBounds(arraySlice.length, offset, length)
+    return ArraySliceImpl(arraySlice.array, arraySlice.offset + offset, length)
+}
+
+private class ArraySliceImpl<T>(
+    override val array: Array<T>, override val offset: Int, override val length: Int
+) : ArraySlice<T> {
 
     override fun sliced() = slice(array, offset, length, Array<T>::size, Array<T>::copyOfRange)
 }
