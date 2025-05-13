@@ -19,8 +19,8 @@ package fyi.ioclub.commons.datamodel.array.slice
 import kotlin.reflect.KClass
 
 internal fun checkIndexBounds(capacity: Int, offset: Int, length: Int) {
-    if (offset < 0) throw ArrayIndexOutOfBoundsException(offset)
-    (offset + length).let { if (it > capacity) throw ArrayIndexOutOfBoundsException(it) }
+    if (offset < 0) throw IndexOutOfBoundsException(offset)
+    (offset + length).let { if (it > capacity) throw IndexOutOfBoundsException(it) }
 }
 
 internal inline fun <A> A.sliceToNewArray(
