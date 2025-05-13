@@ -16,16 +16,20 @@
 
 package fyi.ioclub.commons.datamodel.array.concat
 
-import fyi.ioclub.commons.datamodel.array.slice.arraySliceOf
+import fyi.ioclub.commons.datamodel.array.slice.asSlice
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
+
+private const val E1 = 1L
+private const val E2 = 2L
+private const val E3 = 3L
 
 class LongTest {
 
     @Test
     fun testConcat2() {
-        val a1 = arraySliceOf(longArrayOf(E1))
-        val a2 = arraySliceOf(longArrayOf(E2))
+        val a1 = longArrayOf(E1).asSlice()
+        val a2 = longArrayOf(E2).asSlice()
         val expected = longArrayOf(E1, E2)
         assertContentEquals(expected, concat(a1, a2))
         assertContentEquals(expected, a1 concat a2)
@@ -33,18 +37,11 @@ class LongTest {
 
     @Test
     fun testConcatN() {
-        val a1 = arraySliceOf(longArrayOf(E1))
-        val a2 = arraySliceOf(longArrayOf(E2))
-        val a3 = arraySliceOf(longArrayOf(E3))
+        val a1 = longArrayOf(E1).asSlice()
+        val a2 = longArrayOf(E2).asSlice()
+        val a3 = longArrayOf(E3).asSlice()
         val expected = longArrayOf(E1, E2, E3)
         assertContentEquals(expected, concat(a1, a2, a3))
         assertContentEquals(expected, concat(listOf(a1, a2, a3)))
-    }
-
-    companion object {
-
-        private const val E1 = 1L
-        private const val E2 = 2L
-        private const val E3 = 3L
     }
 }

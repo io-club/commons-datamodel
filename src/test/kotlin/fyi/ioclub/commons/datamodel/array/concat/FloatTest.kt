@@ -16,16 +16,20 @@
 
 package fyi.ioclub.commons.datamodel.array.concat
 
-import fyi.ioclub.commons.datamodel.array.slice.arraySliceOf
+import fyi.ioclub.commons.datamodel.array.slice.asSlice
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
+
+private const val E1 = 1F
+private const val E2 = 2F
+private const val E3 = 3F
 
 class FloatTest {
 
     @Test
     fun testConcat2() {
-        val a1 = arraySliceOf(floatArrayOf(E1))
-        val a2 = arraySliceOf(floatArrayOf(E2))
+        val a1 = floatArrayOf(E1).asSlice()
+        val a2 = floatArrayOf(E2).asSlice()
         val expected = floatArrayOf(E1, E2)
         assertContentEquals(expected, concat(a1, a2))
         assertContentEquals(expected, a1 concat a2)
@@ -33,18 +37,11 @@ class FloatTest {
 
     @Test
     fun testConcatN() {
-        val a1 = arraySliceOf(floatArrayOf(E1))
-        val a2 = arraySliceOf(floatArrayOf(E2))
-        val a3 = arraySliceOf(floatArrayOf(E3))
+        val a1 = floatArrayOf(E1).asSlice()
+        val a2 = floatArrayOf(E2).asSlice()
+        val a3 = floatArrayOf(E3).asSlice()
         val expected = floatArrayOf(E1, E2, E3)
         assertContentEquals(expected, concat(a1, a2, a3))
         assertContentEquals(expected, concat(listOf(a1, a2, a3)))
-    }
-
-    companion object {
-
-        private const val E1 = 1F
-        private const val E2 = 2F
-        private const val E3 = 3F
     }
 }

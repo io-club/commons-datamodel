@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.datamodel.collection.flatting
+package fyi.ioclub.commons.datamodel.collection.flattened
 
 fun <T> Iterable<Iterable<T>>.flatten(): Iterable<T> = let(::FlattenedIterable)
 fun <T> Collection<Collection<T>>.flatten(): Collection<T> = let(::FlattenedCollection)

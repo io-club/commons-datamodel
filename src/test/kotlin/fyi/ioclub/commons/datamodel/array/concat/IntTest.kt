@@ -16,27 +16,31 @@
 
 package fyi.ioclub.commons.datamodel.array.concat
 
-import fyi.ioclub.commons.datamodel.array.slice.arraySliceOf
+import fyi.ioclub.commons.datamodel.array.slice.asSlice
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
+
+private const val E1 = 1
+private const val E2 = 2
+private const val E3 = 3
 
 class IntTest {
 
     @Test
     fun testConcat2() {
-        val a1 = arraySliceOf(intArrayOf(1))
-        val a2 = arraySliceOf(intArrayOf(2))
-        val expected = intArrayOf(1, 2)
+        val a1 = intArrayOf(E1).asSlice()
+        val a2 = intArrayOf(E2).asSlice()
+        val expected = intArrayOf(E1, E2)
         assertContentEquals(expected, concat(a1, a2))
         assertContentEquals(expected, a1 concat a2)
     }
 
     @Test
     fun testConcatN() {
-        val a1 = arraySliceOf(intArrayOf(1))
-        val a2 = arraySliceOf(intArrayOf(2))
-        val a3 = arraySliceOf(intArrayOf(3))
-        val expected = intArrayOf(1, 2, 3)
+        val a1 = intArrayOf(E1).asSlice()
+        val a2 = intArrayOf(E2).asSlice()
+        val a3 = intArrayOf(E3).asSlice()
+        val expected = intArrayOf(E1, E2, E3)
         assertContentEquals(expected, concat(a1, a2, a3))
         assertContentEquals(expected, concat(listOf(a1, a2, a3)))
     }

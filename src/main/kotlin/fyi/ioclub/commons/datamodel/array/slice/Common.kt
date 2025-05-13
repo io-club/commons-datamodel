@@ -16,10 +16,32 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
+import kotlin.reflect.KClass
+
 internal fun checkIndexBounds(capacity: Int, offset: Int, length: Int) {
     if (offset < 0) throw ArrayIndexOutOfBoundsException(offset)
     (offset + length).let { if (it > capacity) throw ArrayIndexOutOfBoundsException(it) }
 }
 
-internal inline fun <A> slice(arr: A, off: Int, len: Int, sizeGetter: A.() -> Int, copier: A.(Int, Int) -> A) =
-    if (off > 0 || len < arr.sizeGetter()) arr.copier(off, off + len) else arr
+internal inline fun <A> A.sliceToNewArray(
+    off: Int,
+    len: Int,
+    copier: A.(Int, Int) -> A,
+): A = copier(off, off + len)
+
+internal abstract class ArraySliceImplBase<out A : Any>(
+    private val implFor: KClass<*>,
+    val array: A,
+    val offset: Int,
+    val length: Int,
+) {
+
+    final override operator fun equals(other: Any?) =
+        this === other || other is ArraySlice<*> && toTriple() == other.toTriple()
+
+    final override fun hashCode() = toTriple().hashCode()
+
+    private fun toTriple() = Triple(array, offset, length)
+
+    final override fun toString() = "${implFor.simpleName}(array=$array, offset=$offset, length=$length)"
+}

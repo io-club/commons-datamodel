@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.datamodel.collection.flatting.easy
+package fyi.ioclub.commons.datamodel.collection.flattened.easy
 
-import fyi.ioclub.commons.datamodel.collection.flatting.flatten
+import fyi.ioclub.commons.datamodel.collection.flattened.flatten
 
-operator fun <T> T.plus(other: Iterable<T>) = listOf(listOf(this), other).flatten()
-operator fun <T> Iterable<T>.plus(other: T) = listOf(this, listOf(other)).flatten()
-operator fun <T> T.plus(other: Collection<T>) = listOf(listOf(this), other).flatten()
-operator fun <T> Collection<T>.plus(other: T) = listOf(this, listOf(other)).flatten()
-operator fun <T> T.plus(other: List<T>) = listOf(listOf(this), other).flatten()
-operator fun <T> List<T>.plus(other: T) = listOf(this, listOf(other)).flatten()
+infix fun <T> Iterable<T>.plusListOf(other: T): Iterable<T> = listOf(this, listOf(other)).flatten()
+infix fun <T> Collection<T>.plusListOf(other: T): Collection<T> = listOf(this, listOf(other)).flatten()
+infix fun <T> List<T>.plusListOf(other: T): List<T> = listOf(this, listOf(other)).flatten()
+
+infix fun <T> T.listOfThisPlus(other: Iterable<T>): Iterable<T> = listOf(listOf(this), other).flatten()
+infix fun <T> T.listOfThisPlus(other: Collection<T>): Collection<T> = listOf(listOf(this), other).flatten()
+infix fun <T> T.listOfThisPlus(other: List<T>): List<T> = listOf(listOf(this), other).flatten()

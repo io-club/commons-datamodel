@@ -19,7 +19,7 @@ package fyi.ioclub.commons.datamodel.array.slice
 import org.jetbrains.annotations.Range
 
 /**
- * Array slice base interface.
+ * General array slice base interface.
  * Compatible with generic arrays [Array]
  * and primitive type arrays like [ByteArray].
  *
@@ -27,10 +27,10 @@ import org.jetbrains.annotations.Range
  * In implementations of this sealed interface,
  * it must be [Array] or one of the primitive type array types like [ByteArray].
  *
- * @see ArraySlice
+ * @see GenericArraySlice
  * @see PrimitiveArraySlice
  */
-sealed interface ArraySliceProtocol<out A : Any> {
+sealed interface ArraySlice<out A: Any> {
 
     val array: A
 
@@ -38,29 +38,57 @@ sealed interface ArraySliceProtocol<out A : Any> {
 
     val length: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int
 
-    /** Returns an array of data sliced from [array], from position [offset] and of length [length]. */
-    fun sliced(): A
+    /**
+     * Creates a new array of data sliced from [array], from position [offset] and of length [length].
+     *
+     * @return the result array
+     */
+    fun toSlicedArray(): A
+
+    /**
+     * This method is only implemented by the abstract classes:
+     * [GenericArraySlice] and subclasses of [PrimitiveArraySlice].
+     *
+     * Currently, custom class must not implement this method.
+     * Instead, it may implement `contentEquals` for specific subtype of [ArraySlice]
+     * , for example, `GenericArraySlice.contentEquals(GenericArraySlice<T>)`.
+     * Or you may implement `contentEquals` of subclasses of [OutDelegate]
+     * and use from-delegate factories
+     * to indirectly implement the specific-typed `contentEquals` of [ArraySlice] subclasses.
+     */
+    fun contentEquals(other: ArraySlice<@UnsafeVariance A>): Boolean
+
+    fun contentHashCode(): Int
+
+    /**
+     * [OutDelegate] does not have any method as following described:
+     *
+     * Method has parameter of supertype `I`,
+     * however subclasses should have methods of same function
+     * but for parameter of subtype `O: I` making it impossible
+     * to override method in superclass.
+     *
+     * Described method in [ArraySlice] is [ArraySlice.contentEquals].
+     * Subclasses like [GenericArraySlice] implement it already
+     * and custom [ArraySlice] implementations must not implement it,
+     * making them abstract subclasses instead of interfaces.
+     * Therefore, we need an interface
+     *
+     * Subinterfaces of [OutDelegate], as nested interface in subclasses of [ArraySlice],
+     * have `contentEquals` for parameter of type of themselves.
+     */
+    sealed interface OutDelegate<out A>{
+
+        val array: A
+
+        val offset: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int
+
+        val length: @Range(from = 0, to = Int.MAX_VALUE.toLong()) Int
+
+        fun toSlicedArray(): A
+
+        fun contentHashCode(): Int
+    }
 }
 
-fun <A : Any> ArraySliceProtocol<A>.toTriple(): Triple<A, Int, Int> = Triple(array, offset, length)
-
-interface ArraySlice<T> : ArraySliceProtocol<Array<T>>
-
-fun <T> arraySliceOf(array: Array<T>): ArraySlice<T> = arraySliceOf(array, 0, array.size)
-fun <T> arraySliceOf(array: Array<T>, offset: Int, length: Int): ArraySlice<T> {
-    checkIndexBounds(array.size, offset, length)
-    return ArraySliceImpl(array, offset, length)
-}
-
-fun <T> arraySliceOf(arraySlice: ArraySlice<T>): ArraySlice<T> = arraySlice
-fun <T> arraySliceOf(arraySlice: ArraySlice<T>, offset: Int, length: Int): ArraySlice<T> {
-    checkIndexBounds(arraySlice.length, offset, length)
-    return ArraySliceImpl(arraySlice.array, arraySlice.offset + offset, length)
-}
-
-private class ArraySliceImpl<T>(
-    override val array: Array<T>, override val offset: Int, override val length: Int
-) : ArraySlice<T> {
-
-    override fun sliced() = slice(array, offset, length, Array<T>::size, Array<T>::copyOfRange)
-}
+fun <A : Any> ArraySlice<A>.toTriple(): Triple<A, Int, Int> = Triple(array, offset, length)

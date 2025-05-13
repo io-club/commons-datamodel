@@ -18,9 +18,6 @@ package fyi.ioclub.commons.datamodel.link.mono
 
 import fyi.ioclub.commons.datamodel.container.Container
 import fyi.ioclub.commons.datamodel.container.getValue
-import fyi.ioclub.commons.datamodel.link.mono.listenDepth
-import fyi.ioclub.commons.datamodel.link.mono.monoLinkTo
-import fyi.ioclub.commons.datamodel.link.mono.toIterable
 import org.junit.jupiter.api.Test
 
 class DepthTest {

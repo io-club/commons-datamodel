@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fyi.ioclub.commons.datamodel.collection.flatting
+package fyi.ioclub.commons.datamodel.collection.flattened
 
 open class FlattenIterator<out E>(protected open val nestedBases: Iterator<Iterator<E>>) : Iterator<E> {
 

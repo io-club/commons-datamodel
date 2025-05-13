@@ -16,7 +16,7 @@
 
 package fyi.ioclub.commons.datamodel.array.concat
 
-import fyi.ioclub.commons.datamodel.array.slice.arraySliceOf
+import fyi.ioclub.commons.datamodel.array.slice.asSlice
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
@@ -30,7 +30,7 @@ class GenericTest {
         val a2 = arrayOf(MyObj(3))
 
         val aim = listOf(2, 3).map(::MyObj).toTypedArray()
-        val ac = concat(MyObj::class.java, arraySliceOf(a1, 1, 1), arraySliceOf(a2))
+        val ac = concat(MyObj::class.java, a1.asSlice(1, 1), a2.asSlice())
         assertTrue(ac contentEquals aim)
     }
 
@@ -41,9 +41,9 @@ class GenericTest {
         val a3 = arrayOf(MyObj(4))
 
         val aim = listOf(2, 3, 4).map(::MyObj).toTypedArray()
-        val ac1 = concat(MyObj::class.java, arraySliceOf(a1, 1, 1), arraySliceOf(a2), arraySliceOf(a3))
+        val ac1 = concat(MyObj::class.java, a1.asSlice(1, 1), a2.asSlice(), a3.asSlice())
         assertTrue(ac1 contentEquals aim)
-        val ac2 = concat(MyObj::class.java, listOf(arraySliceOf(a1, 1, 1), arraySliceOf(a2), arraySliceOf(a3)))
+        val ac2 = concat(MyObj::class.java, listOf(a1.asSlice(1, 1), a2.asSlice(), a3.asSlice()))
         assertTrue(ac2 contentEquals aim)
     }
 }

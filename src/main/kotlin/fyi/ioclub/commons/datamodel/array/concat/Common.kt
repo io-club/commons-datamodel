@@ -16,12 +16,12 @@
 
 package fyi.ioclub.commons.datamodel.array.concat
 
-import fyi.ioclub.commons.datamodel.array.slice.ArraySliceProtocol
+import fyi.ioclub.commons.datamodel.array.slice.ArraySlice
 
 /** @param A array type. */
 internal inline fun <A : Any> concat(
-    source1: ArraySliceProtocol<A>,
-    source2: ArraySliceProtocol<A>,
+    source1: ArraySlice<A>,
+    source2: ArraySlice<A>,
     destinationFactory: (Int) -> A,
 ): A {
     val len1 = source1.length
@@ -34,16 +34,16 @@ internal inline fun <A : Any> concat(
 
 /** @param A array type. */
 internal inline fun <A : Any> concat(
-    source1: ArraySliceProtocol<A>,
-    source2: ArraySliceProtocol<A>,
-    otherSources: Array<out ArraySliceProtocol<A>>,
+    source1: ArraySlice<A>,
+    source2: ArraySlice<A>,
+    otherSources: Array<out ArraySlice<A>>,
     destinationFactory: (Int) -> A,
 ) = if (otherSources.isEmpty()) concat(source1, source2, destinationFactory)
 else concat(listOf(source1, source2, *otherSources), destinationFactory)
 
 /** @param A array type. */
 internal inline fun <A : Any> concat(
-    sources: Collection<ArraySliceProtocol<A>>,
+    sources: Collection<ArraySlice<A>>,
     destinationFactory: (Int) -> A,
 ): A {
     val lenArr = IntArray(sources.size)

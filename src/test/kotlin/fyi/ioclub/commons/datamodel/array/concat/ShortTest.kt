@@ -16,27 +16,31 @@
 
 package fyi.ioclub.commons.datamodel.array.concat
 
-import fyi.ioclub.commons.datamodel.array.slice.arraySliceOf
+import fyi.ioclub.commons.datamodel.array.slice.asSlice
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
+
+private const val E1: Short = 1
+private const val E2: Short = 2
+private const val E3: Short = 3
 
 class ShortTest {
 
     @Test
     fun testConcat2() {
-        val a1 = arraySliceOf(shortArrayOf(1))
-        val a2 = arraySliceOf(shortArrayOf(2))
-        val expected = shortArrayOf(1, 2)
+        val a1 = shortArrayOf(E1).asSlice()
+        val a2 = shortArrayOf(E2).asSlice()
+        val expected = shortArrayOf(E1, E2)
         assertContentEquals(expected, concat(a1, a2))
         assertContentEquals(expected, a1 concat a2)
     }
 
     @Test
     fun testConcatN() {
-        val a1 = arraySliceOf(shortArrayOf(1))
-        val a2 = arraySliceOf(shortArrayOf(2))
-        val a3 = arraySliceOf(shortArrayOf(3))
-        val expected = shortArrayOf(1, 2, 3)
+        val a1 = shortArrayOf(E1).asSlice()
+        val a2 = shortArrayOf(E2).asSlice()
+        val a3 = shortArrayOf(E3).asSlice()
+        val expected = shortArrayOf(E1, E2, E3)
         assertContentEquals(expected, concat(a1, a2, a3))
         assertContentEquals(expected, concat(listOf(a1, a2, a3)))
     }
