@@ -17,7 +17,9 @@
 package fyi.ioclub.commons.datamodel.array.slice
 
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
+import java.io.OutputStream
 import java.nio.BufferUnderflowException
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
@@ -31,17 +33,23 @@ fun String(codePoints: IntArraySlice) = codePoints.run { String(array, offset, l
 fun wrapByteBuffer(arraySlice: ByteArraySlice): ByteBuffer = arraySlice.run { ByteBuffer.wrap(array, offset, length) }
 
 /**
- * @throws  BufferUnderflowException
- *          If there are fewer than {@code length} bytes
- *          remaining in this buffer
- *
- * @throws  IndexOutOfBoundsException
- *          If the preconditions on the {@code offset} and {@code length}
- *          parameters do not hold
+ * @throws java.nio.BufferUnderflowException
+ * If there are fewer than `destination.length` bytes
+ * remaining in this buffer
  *
  * @see ByteBuffer.get
  */
 fun ByteBuffer.get(destination: ByteArraySlice): ByteBuffer = destination.run { this@get.get(array, offset, length) }
+
+/**
+ * @throws java.nio.BufferOverflowException
+ * If there is insufficient space in this buffer
+ * @throws java.nio.ReadOnlyBufferException
+ * If this buffer is read-only
+ *
+ * @see ByteBuffer.put
+ */
+fun ByteBuffer.put(source: ByteArraySlice): ByteBuffer = source.run { this@put.put(array, offset, length) }
 
 /**
  * If [ByteBuffer.hasArray] returns `true`
@@ -62,6 +70,7 @@ fun ByteBuffer.getArraySlice(length: Int = remaining()) = if (hasArray()) {
 }
 
 fun ByteArrayInputStream(arraySlice: ByteArraySlice) = arraySlice.run { ByteArrayInputStream(array, offset, length) }
+fun ByteArrayOutputStream.toByteArraySlice() = toByteArray().asSlice()
 
 /**
  * @throws java.io.IOException
@@ -72,6 +81,14 @@ fun ByteArrayInputStream(arraySlice: ByteArraySlice) = arraySlice.run { ByteArra
  * @see InputStream.read
  */
 fun InputStream.read(arraySlice: ByteArraySlice) = arraySlice.run { read(array, offset, length) }
+
+/**
+ * @throws java.io.IOException if an I/O error occurs.
+ * In particular, an IOException is thrown if the output stream is closed.
+ *
+ * @see OutputStream.write
+ */
+fun OutputStream.write(arraySlice: ByteArraySlice) = arraySlice.run { write(array, offset, length) }
 
 /**
  * @throws java.io.IOException

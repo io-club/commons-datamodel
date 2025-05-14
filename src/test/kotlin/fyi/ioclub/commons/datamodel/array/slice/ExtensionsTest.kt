@@ -17,6 +17,8 @@
 package fyi.ioclub.commons.datamodel.array.slice
 
 import org.junit.jupiter.api.Test
+import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
 import kotlin.test.assertEquals
 
 class ExtensionsTest {
@@ -36,27 +38,37 @@ class ExtensionsTest {
     }
 
     @Test
-    fun testBufferGet() {
+    fun testForBuffer() {
         val s3 = byteArrayOf(0, 1, 2).asSlice()
-        val buf = wrapByteBuffer(s3)
-        buf.mark()
+
+        val bufR = wrapByteBuffer(s3)
+        bufR.mark()
         val s2 = ByteArray(2).asSlice()
-        buf.get(s2)
-        buf.reset()
-        val s2a = buf.getArraySlice(2)
+        bufR.get(s2)
+        bufR.reset()
+        val s2a = bufR.getArraySlice(2)
         assert(s2 contentEquals s2a)
-        assertEquals(buf.array(), s2a.array)
+        assertEquals(bufR.array(), s2a.array)
+
+        val bufW = ByteBuffer.allocate(32)
+        bufW.put(s3)
+        bufW.flip()
+        assert(s3 contentEquals bufW.getArraySlice(bufW.remaining()))
     }
 
     @Test
-    fun testInputStreamRead() {
+    fun testForStream() {
         val s3 = byteArrayOf(0, 1, 2).asSlice()
-        val stream = ByteArrayInputStream(s3)
-        stream.mark(0)
+        val output = ByteArrayOutputStream()
+        output.write(s3)
+        assert(s3 contentEquals output.toByteArraySlice())
+
+        val input = ByteArrayInputStream(s3)
+        input.mark(0)
         val s2 = ByteArray(2).asSlice()
-        stream.read(s2)
-        stream.reset()
-        val s2a = stream.readArraySlice(2)
+        input.read(s2)
+        input.reset()
+        val s2a = input.readArraySlice(2)
         assert(s2 contentEquals s2a)
     }
 }
