@@ -194,13 +194,28 @@ fun IntArray.asSliceTo(to: Int) = asSliceFrom(0, to)
 fun LongArray.asSliceTo(to: Int) = asSliceFrom(0, to)
 fun ShortArray.asSliceTo(to: Int) = asSliceFrom(0, to)
 
+@JvmOverloads
 fun BooleanArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun ByteArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun CharArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun DoubleArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun FloatArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun IntArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun LongArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
+
+@JvmOverloads
 fun ShortArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
 
 fun BooleanArray.asSlice(offset: Int, length: Int): BooleanArraySlice =
@@ -254,13 +269,28 @@ fun IntArraySlice.asSliceTo(to: Int) = asSliceFrom(0, to)
 fun LongArraySlice.asSliceTo(to: Int) = asSliceFrom(0, to)
 fun ShortArraySlice.asSliceTo(to: Int) = asSliceFrom(0, to)
 
+@JvmOverloads
 fun BooleanArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun ByteArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun CharArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun DoubleArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun FloatArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun IntArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun LongArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
+
+@JvmOverloads
 fun ShortArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
 
 fun BooleanArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
@@ -283,18 +313,25 @@ private inline fun <reified A, reified S : PrimitiveArraySlice<A>> S.asSliceTemp
 
 private fun arraySliceOf(array: BooleanArray, offset: Int, length: Int) =
     BooleanArraySlice(BooleanArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: ByteArray, offset: Int, length: Int) =
     ByteArraySlice(ByteArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: CharArray, offset: Int, length: Int) =
     CharArraySlice(CharArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: DoubleArray, offset: Int, length: Int) =
     DoubleArraySlice(DoubleArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: FloatArray, offset: Int, length: Int) =
     FloatArraySlice(FloatArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: IntArray, offset: Int, length: Int) =
     IntArraySlice(IntArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: LongArray, offset: Int, length: Int) =
     LongArraySlice(LongArraySliceDelegateImpl(array, offset, length))
+
 private fun arraySliceOf(array: ShortArray, offset: Int, length: Int) =
     ShortArraySlice(ShortArraySliceDelegateImpl(array, offset, length))
 
