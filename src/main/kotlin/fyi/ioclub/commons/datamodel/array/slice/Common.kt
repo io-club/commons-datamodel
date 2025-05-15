@@ -18,11 +18,6 @@ package fyi.ioclub.commons.datamodel.array.slice
 
 import kotlin.reflect.KClass
 
-internal fun checkIndexBounds(capacity: Int, offset: Int, length: Int) {
-    if (offset < 0) throw IndexOutOfBoundsException(offset)
-    (offset + length).let { if (it > capacity) throw IndexOutOfBoundsException(it) }
-}
-
 internal inline fun <A> A.sliceToNewArray(
     off: Int,
     len: Int,
@@ -44,4 +39,33 @@ internal abstract class ArraySliceImplBase<out A : Any>(
     private fun toTriple() = Triple(array, offset, length)
 
     final override fun toString() = "${implFor.simpleName}(array=$array, offset=$offset, length=$length)"
+}
+
+internal inline fun <A : Any, reified D : ArraySlice.OutDelegate<A>, reified S : ArraySlice<A>> A.asSliceTmpl(
+    arrSize: Int,
+    off: Int,
+    len: Int,
+    delegateFromArray: (arr: A, off: Int, len: Int) -> D,
+    sliceFromDelegate: (D) -> S,
+): S {
+    checkIndexBounds(arrSize, off, len)
+    val delegate = delegateFromArray(this, off, len)
+    return sliceFromDelegate(delegate)
+}
+
+internal inline fun <A : Any, reified D : ArraySlice.OutDelegate<A>, reified S : ArraySlice<A>> S.asSliceTmpl(
+    off: Int,
+    len: Int,
+    delegateFromArray: (arr: A, off: Int, len: Int) -> D,
+    sliceFromDelegate: (D) -> S,
+): S = if (offset == off && length == len) this
+else {
+    checkIndexBounds(length, off, len)
+    val delegate = delegateFromArray(array, offset + off, len)
+    sliceFromDelegate(delegate)
+}
+
+internal fun checkIndexBounds(capacity: Int, offset: Int, length: Int) {
+    if (offset < 0) throw IndexOutOfBoundsException(offset)
+    (offset + length).let { if (it > capacity) throw IndexOutOfBoundsException(it) }
 }

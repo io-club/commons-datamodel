@@ -219,35 +219,28 @@ fun LongArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
 fun ShortArray.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
 
 fun BooleanArray.asSlice(offset: Int, length: Int): BooleanArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::BooleanArraySliceDelegateImpl, ::BooleanArraySlice)
 
 fun ByteArray.asSlice(offset: Int, length: Int): ByteArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::ByteArraySliceDelegateImpl, ::ByteArraySlice)
 
 fun CharArray.asSlice(offset: Int, length: Int): CharArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::CharArraySliceDelegateImpl, ::CharArraySlice)
 
 fun DoubleArray.asSlice(offset: Int, length: Int): DoubleArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::DoubleArraySliceDelegateImpl, ::DoubleArraySlice)
 
 fun FloatArray.asSlice(offset: Int, length: Int): FloatArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::FloatArraySliceDelegateImpl, ::FloatArraySlice)
 
 fun IntArray.asSlice(offset: Int, length: Int): IntArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::IntArraySliceDelegateImpl, ::IntArraySlice)
 
 fun LongArray.asSlice(offset: Int, length: Int): LongArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
+    asSliceTmpl(size, offset, length, ::LongArraySliceDelegateImpl, ::LongArraySlice)
 
 fun ShortArray.asSlice(offset: Int, length: Int): ShortArraySlice =
-    asSliceTemplate(offset, length, size, ::arraySliceOf)
-
-private inline fun <reified A, reified S> A.asSliceTemplate(
-    off: Int, len: Int, arrSize: Int, sliceFac: (A, Int, Int) -> S
-): S {
-    checkIndexBounds(arrSize, off, len)
-    return sliceFac(this, off, len)
-}
+    asSliceTmpl(size, offset, length, ::ShortArraySliceDelegateImpl, ::ShortArraySlice)
 
 // For array slices
 
@@ -293,47 +286,31 @@ fun LongArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to -
 @JvmOverloads
 fun ShortArraySlice.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
 
-fun BooleanArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun ByteArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun CharArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun DoubleArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun FloatArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun IntArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun LongArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
-fun ShortArraySlice.asSlice(offset: Int, length: Int) = asSliceTemplate(offset, length, ::arraySliceOf)
+fun BooleanArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::BooleanArraySliceDelegateImpl, ::BooleanArraySlice)
 
-private inline fun <reified A, reified S : PrimitiveArraySlice<A>> S.asSliceTemplate(
-    off: Int, len: Int, sliceFac: A.(Int, Int) -> S
-): S {
-    checkIndexBounds(length, off, len)
-    return sliceFac(array, offset + off, len)
-}
+fun ByteArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::ByteArraySliceDelegateImpl, ::ByteArraySlice)
+
+fun CharArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::CharArraySliceDelegateImpl, ::CharArraySlice)
+
+fun DoubleArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::DoubleArraySliceDelegateImpl, ::DoubleArraySlice)
+
+fun FloatArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::FloatArraySliceDelegateImpl, ::FloatArraySlice)
+
+fun IntArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::IntArraySliceDelegateImpl, ::IntArraySlice)
+
+fun LongArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::LongArraySliceDelegateImpl, ::LongArraySlice)
+
+fun ShortArraySlice.asSlice(offset: Int, length: Int) =
+    asSliceTmpl(offset, length, ::ShortArraySliceDelegateImpl, ::ShortArraySlice)
 
 // Implementations
-
-private fun arraySliceOf(array: BooleanArray, offset: Int, length: Int) =
-    BooleanArraySlice(BooleanArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: ByteArray, offset: Int, length: Int) =
-    ByteArraySlice(ByteArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: CharArray, offset: Int, length: Int) =
-    CharArraySlice(CharArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: DoubleArray, offset: Int, length: Int) =
-    DoubleArraySlice(DoubleArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: FloatArray, offset: Int, length: Int) =
-    FloatArraySlice(FloatArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: IntArray, offset: Int, length: Int) =
-    IntArraySlice(IntArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: LongArray, offset: Int, length: Int) =
-    LongArraySlice(LongArraySliceDelegateImpl(array, offset, length))
-
-private fun arraySliceOf(array: ShortArray, offset: Int, length: Int) =
-    ShortArraySlice(ShortArraySliceDelegateImpl(array, offset, length))
 
 private class BooleanArraySliceDelegateImpl(array: BooleanArray, offset: Int, length: Int) : BooleanArraySlice.Delegate,
     ArraySliceImplBase<BooleanArray>(BooleanArraySlice::class, array, offset, length) {

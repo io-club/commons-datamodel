@@ -43,20 +43,16 @@ fun <T> Array<T>.asSliceTo(to: Int) = asSliceFrom(0, to)
 
 @JvmOverloads
 fun <T> Array<T>.asSliceFrom(from: Int, to: Int = size) = asSlice(from, to - from)
-fun <T> Array<T>.asSlice(offset: Int, length: Int): GenericArraySlice<T> {
-    checkIndexBounds(this.size, offset, length)
-    return GenericArraySlice(GenericArraySliceDelegateImpl(this, offset, length))
-}
+fun <T> Array<T>.asSlice(offset: Int, length: Int): GenericArraySlice<T> =
+    asSliceTmpl(size, offset, length, ::GenericArraySliceDelegateImpl, ::GenericArraySlice)
 
 fun <T> GenericArraySlice<T>.asSlice(): GenericArraySlice<T> = this
 fun <T> GenericArraySlice<T>.asSliceTo(to: Int) = asSliceFrom(0, to)
 
 @JvmOverloads
 fun <T> GenericArraySlice<T>.asSliceFrom(from: Int, to: Int = length) = asSlice(from, to - from)
-fun <T> GenericArraySlice<T>.asSlice(offset: Int, length: Int): GenericArraySlice<T> {
-    checkIndexBounds(this.length, offset, length)
-    return GenericArraySlice(GenericArraySliceDelegateImpl(array, this.offset + offset, length))
-}
+fun <T> GenericArraySlice<T>.asSlice(offset: Int, length: Int): GenericArraySlice<T> =
+    asSliceTmpl(offset, length, ::GenericArraySliceDelegateImpl, ::GenericArraySlice)
 
 private class GenericArraySliceDelegateImpl<T>(
     array: Array<T>, offset: Int, length: Int
