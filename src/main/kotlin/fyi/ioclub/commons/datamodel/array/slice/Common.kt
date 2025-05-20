@@ -16,56 +16,139 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
+import fyi.ioclub.commons.datamodel.array.iterator.ArrayIterator
 import kotlin.reflect.KClass
 
-internal inline fun <A> A.sliceToNewArray(
-    off: Int,
-    len: Int,
-    copier: A.(Int, Int) -> A,
-): A = copier(off, off + len)
+internal inline fun <A : Any, D : ArraySliceData<A>> D.toSlicedArrayTmpl(
+    copyOfRange: A.(from: Int, to: Int) -> A,
+): A {
+    val (arr, off, len) = toTriple()
+    return arr.copyOfRange(off, off + len)
+}
 
-internal abstract class ArraySliceImplBase<out A : Any>(
+internal open class ArraySliceDataImpl<out A : Any>(
     private val implFor: KClass<*>,
-    val array: A,
-    val offset: Int,
-    val length: Int,
-) {
+    override val array: A,
+    override val offset: Int,
+    override val length: Int,
+) : ArraySliceData<A> {
 
     final override operator fun equals(other: Any?) =
-        this === other || other is ArraySlice<*> && toTriple() == other.toTriple()
+        this === other || other is ArraySliceData<*> && toTriple() == other.toTriple()
 
     final override fun hashCode() = toTriple().hashCode()
-
-    private fun toTriple() = Triple(array, offset, length)
 
     final override fun toString() = "${implFor.simpleName}(array=$array, offset=$offset, length=$length)"
 }
 
-internal inline fun <A : Any, reified D : ArraySlice.OutDelegate<A>, reified S : ArraySlice<A>> A.asSliceTmpl(
+internal abstract class ArraySliceDelegateImplBase<out A : Any>(
+    implFor: KClass<*>, array: A, offset: Int, length: Int,
+) : ArraySlice.OutDelegate<A>, ArraySliceDataImpl<A>(implFor, array, offset, length)
+
+internal inline fun <E, A : Any, D : ArraySlice.OutDelegate<A>, reified S : ArraySlice.Typed<E, A>> A.asSliceTmpl(
     arrSize: Int,
     off: Int,
     len: Int,
     delegateFromArray: (arr: A, off: Int, len: Int) -> D,
     sliceFromDelegate: (D) -> S,
 ): S {
-    checkIndexBounds(arrSize, off, len)
+    checkInCapacity(arrSize, off, len)
     val delegate = delegateFromArray(this, off, len)
     return sliceFromDelegate(delegate)
 }
 
-internal inline fun <A : Any, reified D : ArraySlice.OutDelegate<A>, reified S : ArraySlice<A>> S.asSliceTmpl(
+internal inline fun <A : Any, D : ArraySlice.OutDelegate<A>, reified S : ArraySlice<A>> S.asSliceTmpl(
     off: Int,
     len: Int,
     delegateFromArray: (arr: A, off: Int, len: Int) -> D,
     sliceFromDelegate: (D) -> S,
 ): S = if (offset == off && length == len) this
 else {
-    checkIndexBounds(length, off, len)
+    checkInCapacity(length, off, len)
     val delegate = delegateFromArray(array, offset + off, len)
     sliceFromDelegate(delegate)
 }
 
-internal fun checkIndexBounds(capacity: Int, offset: Int, length: Int) {
+private fun checkInCapacity(capacity: Int, offset: Int, length: Int) {
     if (offset < 0) throw IndexOutOfBoundsException(offset)
     (offset + length).let { if (it > capacity) throw IndexOutOfBoundsException(it) }
 }
+
+internal inline fun <A : Any, D : ArraySliceData<A>> D.contentEqualsTmpl(
+    other: D, arrEquals: ArrRangeEquals<A>
+): Boolean = arrEquals(
+    this.array, this.offset, this.endArrayIndexExclusive,
+    other.array, other.offset, other.endArrayIndexExclusive,
+)
+
+internal inline fun <E, A : Any, D : ArraySliceData<A>> D.iteratorTmpl(
+    arrIdx: Int, crossinline arrGet: ArrGet<E, A>, crossinline arrSet: ArrSet<E, A>
+): ArrayIterator<E> = object : ArrayIterator<E> {
+    private val endExclusive = endArrayIndexExclusive
+
+    private var currArrIdx = arrIdx
+    private var lastRetArrIdx = -1
+
+    override fun next(): E {
+        val i = currArrIdx
+        if (i >= endExclusive) throw NoSuchElementException()
+        currArrIdx = i + 1
+        return getAndUpdateLastRet(i)
+    }
+
+    override fun hasNext() = currArrIdx < endExclusive
+    override fun hasPrevious() = currArrIdx > offset
+
+    override fun previous(): E {
+        val i = currArrIdx - 1
+        if (i < 0) throw NoSuchElementException()
+        currArrIdx = i
+        return getAndUpdateLastRet(i)
+    }
+
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun getAndUpdateLastRet(i: Int): E {
+        val e = array.arrGet(i)
+        lastRetArrIdx = i
+        return e
+    }
+
+    override fun nextIndex() = currArrIdx
+    override fun previousIndex() = currArrIdx - 1
+
+    override fun set(element: E) {
+        check(lastRetArrIdx != -1) { "Neither next nor previous has not been called yet" }
+        array.arrSet(lastRetArrIdx, element)
+    }
+}
+
+internal fun <A : Any, OD : ArraySliceData<A>, D : OD> OD.copyIntoTmpl(dst: D): D {
+    val (srcArr, srcOff, srcLen) = toTriple()
+    val (dstArr, dstOff, dstLen) = dst.toTriple()
+    if (dstLen < srcLen) throw IndexOutOfBoundsException(srcLen)
+    System.arraycopy(srcArr, srcOff, dstArr, dstOff, srcLen)
+    return dst
+}
+
+internal inline fun <E, A : Any, D : ArraySliceData<A>> D.fillTmpl(
+    e: E, fill: ArrFill<E, A>
+): Unit = array.fill(e, offset, endArrayIndexExclusive)
+
+internal inline fun <E, A : Any, D : ArraySliceData<A>> D.arrayBinarySearchTmpl(
+    e: E, cmp: Comparator<in E>, arrBinSearch: CmpArrBinSearch<E, A>
+): Int = array.arrBinSearch(e, cmp, offset, endArrayIndexExclusive)
+
+internal inline fun <E, A : Any, D : ArraySliceData<A>> D.arrayBinarySearchTmpl(
+    e: E, arrBinSearch: GenArrBinSearch<E, A>
+): Int = array.arrBinSearch(e, offset, endArrayIndexExclusive)
+
+internal inline fun <A : Any, D : ArraySliceData<A>> D.sortTmpl(arrSort: ArrSort<A>): Unit =
+    array.arrSort()
+
+private typealias ArrRangeEquals<A> = (a: A, aFrom: Int, aTo: Int, b: A, bFrom: Int, bTo: Int) -> Boolean
+private typealias ArrGet<E, A> = A.(i: Int) -> E
+private typealias ArrSet<E, A> = A.(i: Int, v: E) -> Unit
+private typealias GenArrBinSearch<E, A> = A.(e: E, from: Int, to: Int) -> Int
+private typealias CmpArrBinSearch<E, A> = A.(e: E, cmp: Comparator<in E>, from: Int, to: Int) -> Int
+private typealias ArrFill<E, A> = A.(e: E, from: Int, to: Int) -> Unit
+private typealias ArrSort<A> = A.() -> Unit

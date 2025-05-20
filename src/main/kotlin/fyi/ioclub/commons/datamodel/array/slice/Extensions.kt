@@ -32,6 +32,41 @@ fun String(codePoints: IntArraySlice) = codePoints.run { String(array, offset, l
 /** @see ByteBuffer.wrap */
 fun wrapByteBuffer(arraySlice: ByteArraySlice): ByteBuffer = arraySlice.run { ByteBuffer.wrap(array, offset, length) }
 
+fun ByteBuffer.asByteArraySlice(): ByteArraySlice = object : ByteArraySlice() {
+
+    private val delegate get() = array.asSlice(offset, length)
+
+    override val array get() = array()
+    override val offset get() = arrayOffset() + position()
+    override val length get() = remaining()
+
+    override fun toSlicedArray(): ByteArray {
+        mark()
+        val arr = ByteArray(length)
+        get(arr)
+        reset()
+        return arr
+    }
+
+    override operator fun iterator() = delegate.iterator()
+    override fun equals(other: Any?) = delegate == other
+    override fun hashCode() = delegate.hashCode()
+    override fun toString() = "$delegate from $this"
+    override infix fun contentEquals(other: ByteArraySlice) = delegate contentEquals other
+    override fun contentHashCode() = delegate.contentHashCode()
+    override fun contentToString() = delegate.contentToString()
+    override fun contentDeepHashCode() = delegate.contentDeepHashCode()
+    override fun contentDeepToString() = delegate.contentDeepToString()
+    override fun arrayIterator() = delegate.arrayIterator()
+    override fun arrayIterator(arrayIndex: Int) = delegate.arrayIterator(arrayIndex)
+    override fun arrayIndexOf(element: Byte) = delegate.arrayIndexOf(element)
+    override fun lastArrayIndexOf(element: Byte) = delegate.lastArrayIndexOf(element)
+    override fun copyInto(destination: ByteArraySlice) = delegate.copyInto(destination)
+    override fun fill(element: Byte) = delegate.fill(element)
+    override fun arrayBinarySearch(element: Byte) = delegate.arrayBinarySearch(element)
+    override fun sort() = delegate.sort()
+}
+
 /**
  * @throws java.nio.BufferUnderflowException
  * If there are fewer than `destination.length` bytes
