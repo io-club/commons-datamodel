@@ -46,9 +46,16 @@ class ExtensionsTest {
         val s2 = ByteArray(2).asSlice()
         bufR.get(s2)
         bufR.reset()
+        bufR.mark()
         val s2a = bufR.getArraySlice(2)
+        bufR.reset()
         assert(s2 contentEquals s2a)
         assertEquals(bufR.array(), s2a.array)
+
+        val basFromBuf = bufR.asByteArraySlice()
+        println(basFromBuf)
+        assertEquals(s3, basFromBuf)
+        println(basFromBuf.contentToString())
 
         val bufW = ByteBuffer.allocate(32)
         bufW.put(s3)

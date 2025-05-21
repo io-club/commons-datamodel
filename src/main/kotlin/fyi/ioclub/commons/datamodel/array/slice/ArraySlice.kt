@@ -53,7 +53,7 @@ fun <E, A : Any> ArraySliceData.Typed<E, A>.asCollection(): Collection<E> =
  * In implementations of this sealed interface,
  * it must be [Array] or one of the primitive type array types like [ByteArray].
  *
- * @see GenericArraySliceComparable
+ * @see GenericArraySlice
  * @see PrimitiveArraySlice
  */
 sealed interface ArraySlice<out A : Any> : ArraySliceData<A> {
@@ -67,7 +67,7 @@ sealed interface ArraySlice<out A : Any> : ArraySliceData<A> {
 
     /**
      * This method is only implemented by the abstract classes:
-     * [GenericArraySliceComparable] and subclasses of [PrimitiveArraySlice].
+     * [GenericArraySlice] and subclasses of [PrimitiveArraySlice].
      *
      * Currently, custom class must not implement this method.
      * Instead, it may implement `contentEquals` for specific subtype of [ArraySlice]

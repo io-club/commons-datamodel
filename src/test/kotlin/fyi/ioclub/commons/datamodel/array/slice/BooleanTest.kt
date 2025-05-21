@@ -16,11 +16,13 @@
 
 package fyi.ioclub.commons.datamodel.array.slice
 
+import fyi.ioclub.commons.datamodel.array.iterator.arrayIterator
 import org.junit.jupiter.api.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import fyi.ioclub.commons.datamodel.array.slice.BooleanArraySlice as TestArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.toBooleanArraySlice as toPrimitiveArraySlice
 
 private fun createArray3() = booleanArrayOf(true, false, true)
 
@@ -56,7 +58,36 @@ class BooleanTest {
         val c = TestArraySlice(d)
         assertEquals(s2.toTriple(), c.toTriple())
 
-        println(s2)
         println(c)
+        println(s2)
+
+        assertTrue(s3.toTypedArraySlice().toPrimitiveArraySlice() contentEquals s3)
+
+        assertTrue((a3.arrayIterator().asSequence() zip s3.arrayIterator().asSequence()).all { (a, b) -> a == b })
+        assertTrue(
+            (s2.arrayIterator().asSequence() zip s3.arrayIterator(s3.offset + 1).asSequence()).all { (a, b) -> a == b })
+
+        val a31 = a3[1]
+        val a32 = a3[2]
+        a3[2] = a31
+        assertEquals(1, s3.arrayIndexOf(a31))
+        assertEquals(2, s3.lastArrayIndexOf(a31))
+        a3[2] = a32
+        assertEquals(s3.arrayIndexOf(a31), s3.arrayBinarySearch(a31))
+
+        run {
+            val temp = a3[2]
+            a3[2] = a3[0]
+            a3[0] = temp
+        }
+        println("Not sorted: ${s3.contentToString()}")
+        s3.sort()
+        println("Sorted: ${s3.contentToString()}")
+
+        val sc = s3.toSlicedArray().asSlice()
+        s3.fill(a31)
+        assertTrue(s3.asIterable().all(a31::equals))
+        s3.copyInto(sc)
+        assertTrue(s3 contentEquals sc)
     }
 }

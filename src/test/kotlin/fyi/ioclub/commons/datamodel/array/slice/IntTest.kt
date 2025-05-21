@@ -21,6 +21,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import fyi.ioclub.commons.datamodel.array.slice.IntArraySlice as TestArraySlice
+import fyi.ioclub.commons.datamodel.array.slice.toIntArraySlice as toPrimitiveArraySlice
 
 private fun createArray3() = intArrayOf(0, 1, 2)
 
@@ -56,7 +57,35 @@ class IntTest {
         val c = TestArraySlice(d)
         assertEquals(s2.toTriple(), c.toTriple())
 
-        println(s2)
         println(c)
+        println(s2)
+
+        assertTrue(s3.toTypedArraySlice().toPrimitiveArraySlice() contentEquals s3)
+
+        assertTrue(
+            (s2.arrayIterator().asSequence() zip s3.arrayIterator(s3.offset + 1).asSequence()).all { (a, b) -> a == b })
+
+        val a31 = a3[1]
+        val a32 = a3[2]
+        a3[2] = a31
+        assertEquals(1, s3.arrayIndexOf(a31))
+        assertEquals(2, s3.lastArrayIndexOf(a31))
+        a3[2] = a32
+        assertEquals(s3.arrayIndexOf(a31), s3.arrayBinarySearch(a31))
+
+        run {
+            val temp = a3[2]
+            a3[2] = a3[0]
+            a3[0] = temp
+        }
+        println("Not sorted: ${s3.contentToString()}")
+        s3.sort()
+        println("Sorted: ${s3.contentToString()}")
+
+        val sc = s3.toSlicedArray().asSlice()
+        s3.fill(a31)
+        assertTrue(s3.asIterable().all(a31::equals))
+        s3.copyInto(sc)
+        assertTrue(s3 contentEquals sc)
     }
 }

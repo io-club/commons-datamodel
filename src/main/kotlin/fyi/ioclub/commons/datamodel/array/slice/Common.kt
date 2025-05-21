@@ -74,7 +74,7 @@ private fun checkInCapacity(capacity: Int, offset: Int, length: Int) {
     (offset + length).let { if (it > capacity) throw IndexOutOfBoundsException(it) }
 }
 
-internal fun <E, A : Any, D : ArraySliceData.Typed<E, A>> D.contentEqualsDefaultTmpl(other: D): Boolean {
+internal fun <D : ArraySliceData.Typed<*, *>> D.contentEqualsDefaultTmpl(other: ArraySlice.Typed<*, *>): Boolean {
     val merge = asIterable().asSequence() zip other.asIterable().asSequence()
     return merge.all { (a, b) -> a == b }
 }
@@ -149,7 +149,6 @@ internal inline fun <E, A : Any, D : ArraySliceData<A>> D.arrayBinarySearchTmpl(
 internal inline fun <A : Any, D : ArraySliceData<A>> D.sortTmpl(arrSort: ArrSort<A>): Unit =
     array.arrSort()
 
-//private typealias EEquals<E1, E2> = (E1, E2) -> Unit
 private typealias ArrRangeEquals<A> = (a: A, aFrom: Int, aTo: Int, b: A, bFrom: Int, bTo: Int) -> Boolean
 private typealias ArrGet<E, A> = A.(i: Int) -> E
 private typealias ArrSet<E, A> = A.(i: Int, v: E) -> Unit

@@ -27,7 +27,8 @@ abstract class GenericArraySlice<T> : ArraySlice.Typed<T, Array<T>> {
     final override fun copyInto(destination: ArraySlice.Typed<in T, Array<T>>): GenericArraySlice<in T> =
         copyInto(destination as GenericArraySlice<in T>)
 
-    abstract fun copyInto(destination: GenericArraySlice<in T>): GenericArraySlice<in T>
+    /** Overload resolution ambiguity between two [copyInto] if without `protected`. */
+    protected abstract fun copyInto(destination: GenericArraySlice<in T>): GenericArraySlice<in T>
 
     /** @return array index of [element]. */
     abstract fun arrayBinarySearch(element: T, comparator: Comparator<in T>): Int
@@ -37,10 +38,7 @@ abstract class GenericArraySlice<T> : ArraySlice.Typed<T, Array<T>> {
 
     interface Delegate<T> : ArraySlice.OutDelegate.Typed<T, Array<T>> {
 
-        infix fun contentEquals(other: GenericArraySlice<*>): Boolean {
-            val merge = asIterable().asSequence() zip other.asIterable().asSequence()
-            return merge.all { (a, b) -> a == b }
-        }
+        infix fun contentEquals(other: GenericArraySlice<*>): Boolean = contentEqualsDefaultTmpl(other)
 
         fun copyInto(destination: GenericArraySlice<in T>): GenericArraySlice<in T> =
             throw UnsupportedOperationException()

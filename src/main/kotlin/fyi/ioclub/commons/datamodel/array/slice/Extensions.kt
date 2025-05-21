@@ -51,7 +51,7 @@ fun ByteBuffer.asByteArraySlice(): ByteArraySlice = object : ByteArraySlice() {
     override operator fun iterator() = delegate.iterator()
     override fun equals(other: Any?) = delegate == other
     override fun hashCode() = delegate.hashCode()
-    override fun toString() = "$delegate from $this"
+    override fun toString() = "$delegate from ${this@asByteArraySlice}"
     override infix fun contentEquals(other: ByteArraySlice) = delegate contentEquals other
     override fun contentHashCode() = delegate.contentHashCode()
     override fun contentToString() = delegate.contentToString()

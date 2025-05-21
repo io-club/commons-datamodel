@@ -42,8 +42,7 @@ internal inline fun <E, A : Any> A.iteratorTmpl(
         return getAndUpdateLastRet(i)
     }
 
-    @Suppress("NOTHING_TO_INLINE")
-    private inline fun getAndUpdateLastRet(i: Int): E {
+    private fun getAndUpdateLastRet(i: Int): E {
         val e = get(i)
         lastRetIdx = i
         return e
