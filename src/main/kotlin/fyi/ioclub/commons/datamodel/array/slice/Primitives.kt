@@ -34,9 +34,9 @@ abstract class BooleanArraySlice : PrimitiveArraySlice<Boolean, BooleanArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Boolean, BooleanArray> {
 
-        infix fun contentEquals(other: BooleanArraySlice): Boolean
+        infix fun contentEquals(other: BooleanArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: BooleanArraySlice): BooleanArraySlice
+        fun copyInto(destination: BooleanArraySlice): BooleanArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -59,9 +59,9 @@ abstract class ByteArraySlice : PrimitiveArraySlice<Byte, ByteArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Byte, ByteArray> {
 
-        infix fun contentEquals(other: ByteArraySlice): Boolean
+        infix fun contentEquals(other: ByteArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: ByteArraySlice): ByteArraySlice
+        fun copyInto(destination: ByteArraySlice): ByteArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -84,9 +84,9 @@ abstract class CharArraySlice : PrimitiveArraySlice<Char, CharArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Char, CharArray> {
 
-        infix fun contentEquals(other: CharArraySlice): Boolean
+        infix fun contentEquals(other: CharArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: CharArraySlice): CharArraySlice
+        fun copyInto(destination: CharArraySlice): CharArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -109,9 +109,9 @@ abstract class DoubleArraySlice : PrimitiveArraySlice<Double, DoubleArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Double, DoubleArray> {
 
-        infix fun contentEquals(other: DoubleArraySlice): Boolean
+        infix fun contentEquals(other: DoubleArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: DoubleArraySlice): DoubleArraySlice
+        fun copyInto(destination: DoubleArraySlice): DoubleArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -134,9 +134,9 @@ abstract class FloatArraySlice : PrimitiveArraySlice<Float, FloatArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Float, FloatArray> {
 
-        infix fun contentEquals(other: FloatArraySlice): Boolean
+        infix fun contentEquals(other: FloatArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: FloatArraySlice): FloatArraySlice
+        fun copyInto(destination: FloatArraySlice): FloatArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -159,9 +159,9 @@ abstract class IntArraySlice : PrimitiveArraySlice<Int, IntArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Int, IntArray> {
 
-        infix fun contentEquals(other: IntArraySlice): Boolean
+        infix fun contentEquals(other: IntArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: IntArraySlice): IntArraySlice
+        fun copyInto(destination: IntArraySlice): IntArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -184,9 +184,9 @@ abstract class LongArraySlice : PrimitiveArraySlice<Long, LongArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Long, LongArray> {
 
-        infix fun contentEquals(other: LongArraySlice): Boolean
+        infix fun contentEquals(other: LongArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: LongArraySlice): LongArraySlice
+        fun copyInto(destination: LongArraySlice): LongArraySlice = throw UnsupportedOperationException()
     }
 }
 
@@ -209,9 +209,9 @@ abstract class ShortArraySlice : PrimitiveArraySlice<Short, ShortArray> {
 
     interface Delegate : ArraySlice.OutDelegate.Typed.Comparable<Short, ShortArray> {
 
-        infix fun contentEquals(other: ShortArraySlice): Boolean
+        infix fun contentEquals(other: ShortArraySlice): Boolean = contentEqualsDefaultTmpl(other)
 
-        fun copyInto(destination: ShortArraySlice): ShortArraySlice
+        fun copyInto(destination: ShortArraySlice): ShortArraySlice = throw UnsupportedOperationException()
     }
 }
 

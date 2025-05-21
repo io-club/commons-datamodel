@@ -49,10 +49,9 @@ class IntTest {
             override val array = s2.array
             override val offset = s2.offset
             override val length = s2.length
-            override fun toSlicedArray() = throw UnsupportedOperationException()
-            override fun contentHashCode() = throw UnsupportedOperationException()
-            override fun contentEquals(other: TestArraySlice) = throw UnsupportedOperationException()
             override fun toString() = "CustomArraySlice"
+            override fun toSlicedArray() = throw UnsupportedOperationException()
+            override fun arrayIterator(arrayIndex: Int) = TODO("Not yet implemented")
         }
         val c = TestArraySlice(d)
         assertEquals(s2.toTriple(), c.toTriple())

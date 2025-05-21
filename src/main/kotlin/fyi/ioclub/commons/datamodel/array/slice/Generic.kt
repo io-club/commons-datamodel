@@ -37,7 +37,10 @@ abstract class GenericArraySlice<T> : ArraySlice.Typed<T, Array<T>> {
 
     interface Delegate<T> : ArraySlice.OutDelegate.Typed<T, Array<T>> {
 
-        infix fun contentEquals(other: GenericArraySlice<*>): Boolean
+        infix fun contentEquals(other: GenericArraySlice<*>): Boolean {
+            val merge = asIterable().asSequence() zip other.asIterable().asSequence()
+            return merge.all { (a, b) -> a == b }
+        }
 
         fun copyInto(destination: GenericArraySlice<in T>): GenericArraySlice<in T> =
             throw UnsupportedOperationException()
