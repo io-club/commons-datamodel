@@ -19,46 +19,46 @@ package fyi.ioclub.commons.datamodel.array.concat
 import fyi.ioclub.commons.datamodel.array.slice.*
 
 fun concat(source1: BooleanArraySlice, source2: BooleanArraySlice, vararg sourceN: BooleanArraySlice) =
-    concat(source1, source2, sourceN, ::BooleanArray)
+    concatTmpl(source1, source2, sourceN, ::BooleanArray)
 
 fun concat(source1: ByteArraySlice, source2: ByteArraySlice, vararg sourceN: ByteArraySlice) =
-    concat(source1, source2, sourceN, ::ByteArray)
+    concatTmpl(source1, source2, sourceN, ::ByteArray)
 
 fun concat(source1: CharArraySlice, source2: CharArraySlice, vararg sourceN: CharArraySlice) =
-    concat(source1, source2, sourceN, ::CharArray)
+    concatTmpl(source1, source2, sourceN, ::CharArray)
 
 fun concat(source1: DoubleArraySlice, source2: DoubleArraySlice, vararg sourceN: DoubleArraySlice) =
-    concat(source1, source2, sourceN, ::DoubleArray)
+    concatTmpl(source1, source2, sourceN, ::DoubleArray)
 
 fun concat(source1: FloatArraySlice, source2: FloatArraySlice, vararg sourceN: FloatArraySlice) =
-    concat(source1, source2, sourceN, ::FloatArray)
+    concatTmpl(source1, source2, sourceN, ::FloatArray)
 
 fun concat(source1: IntArraySlice, source2: IntArraySlice, vararg sourceN: IntArraySlice) =
-    concat(source1, source2, sourceN, ::IntArray)
+    concatTmpl(source1, source2, sourceN, ::IntArray)
 
 fun concat(source1: LongArraySlice, source2: LongArraySlice, vararg sourceN: LongArraySlice) =
-    concat(source1, source2, sourceN, ::LongArray)
+    concatTmpl(source1, source2, sourceN, ::LongArray)
 
 fun concat(source1: ShortArraySlice, source2: ShortArraySlice, vararg sourceN: ShortArraySlice) =
-    concat(source1, source2, sourceN, ::ShortArray)
+    concatTmpl(source1, source2, sourceN, ::ShortArray)
 
-fun concat(sources: Collection<BooleanArraySlice>) = concat(sources, ::BooleanArray)
-fun concat(sources: Collection<ByteArraySlice>) = concat(sources, ::ByteArray)
-fun concat(sources: Collection<CharArraySlice>) = concat(sources, ::CharArray)
-fun concat(sources: Collection<DoubleArraySlice>) = concat(sources, ::DoubleArray)
-fun concat(sources: Collection<FloatArraySlice>) = concat(sources, ::FloatArray)
-fun concat(sources: Collection<IntArraySlice>) = concat(sources, ::IntArray)
-fun concat(sources: Collection<LongArraySlice>) = concat(sources, ::LongArray)
-fun concat(sources: Collection<ShortArraySlice>) = concat(sources, ::ShortArray)
+fun concat(sources: Collection<BooleanArraySlice>) = concatTmpl(sources, ::BooleanArray)
+fun concat(sources: Collection<ByteArraySlice>) = concatTmpl(sources, ::ByteArray)
+fun concat(sources: Collection<CharArraySlice>) = concatTmpl(sources, ::CharArray)
+fun concat(sources: Collection<DoubleArraySlice>) = concatTmpl(sources, ::DoubleArray)
+fun concat(sources: Collection<FloatArraySlice>) = concatTmpl(sources, ::FloatArray)
+fun concat(sources: Collection<IntArraySlice>) = concatTmpl(sources, ::IntArray)
+fun concat(sources: Collection<LongArraySlice>) = concatTmpl(sources, ::LongArray)
+fun concat(sources: Collection<ShortArraySlice>) = concatTmpl(sources, ::ShortArray)
 
-infix fun BooleanArraySlice.concat(other: BooleanArraySlice) = concat(this, other, ::BooleanArray)
-infix fun ByteArraySlice.concat(other: ByteArraySlice) = concat(this, other, ::ByteArray)
-infix fun CharArraySlice.concat(other: CharArraySlice) = concat(this, other, ::CharArray)
-infix fun DoubleArraySlice.concat(other: DoubleArraySlice) = concat(this, other, ::DoubleArray)
-infix fun FloatArraySlice.concat(other: FloatArraySlice) = concat(this, other, ::FloatArray)
-infix fun IntArraySlice.concat(other: IntArraySlice) = concat(this, other, ::IntArray)
-infix fun LongArraySlice.concat(other: LongArraySlice) = concat(this, other, ::LongArray)
-infix fun ShortArraySlice.concat(other: ShortArraySlice) = concat(this, other, ::ShortArray)
+infix fun BooleanArraySlice.concat(other: BooleanArraySlice) = concatTmpl(this, other, ::BooleanArray)
+infix fun ByteArraySlice.concat(other: ByteArraySlice) = concatTmpl(this, other, ::ByteArray)
+infix fun CharArraySlice.concat(other: CharArraySlice) = concatTmpl(this, other, ::CharArray)
+infix fun DoubleArraySlice.concat(other: DoubleArraySlice) = concatTmpl(this, other, ::DoubleArray)
+infix fun FloatArraySlice.concat(other: FloatArraySlice) = concatTmpl(this, other, ::FloatArray)
+infix fun IntArraySlice.concat(other: IntArraySlice) = concatTmpl(this, other, ::IntArray)
+infix fun LongArraySlice.concat(other: LongArraySlice) = concatTmpl(this, other, ::LongArray)
+infix fun ShortArraySlice.concat(other: ShortArraySlice) = concatTmpl(this, other, ::ShortArray)
 
 operator fun BooleanArraySlice.plus(other: BooleanArraySlice) = this concat other
 operator fun ByteArraySlice.plus(other: ByteArraySlice) = this concat other

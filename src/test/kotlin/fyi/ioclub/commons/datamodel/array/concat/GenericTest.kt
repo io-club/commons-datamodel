@@ -19,6 +19,7 @@ package fyi.ioclub.commons.datamodel.array.concat
 import fyi.ioclub.commons.datamodel.array.slice.asSlice
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import kotlin.test.assertContentEquals
 
 class GenericTest {
 
@@ -42,8 +43,8 @@ class GenericTest {
 
         val aim = listOf(2, 3, 4).map(::MyObj).toTypedArray()
         val ac1 = concat(MyObj::class.java, a1.asSlice(1, 1), a2.asSlice(), a3.asSlice())
-        assertTrue(ac1 contentEquals aim)
+        assertContentEquals(aim, ac1)
         val ac2 = concat(MyObj::class.java, listOf(a1.asSlice(1, 1), a2.asSlice(), a3.asSlice()))
-        assertTrue(ac2 contentEquals aim)
+        assertContentEquals(aim, ac2)
     }
 }
