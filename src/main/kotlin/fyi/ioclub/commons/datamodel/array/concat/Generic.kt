@@ -19,12 +19,12 @@ package fyi.ioclub.commons.datamodel.array.concat
 import fyi.ioclub.commons.datamodel.array.slice.GenericArraySlice
 
 fun <T> concat(clazz: Class<T>, source1: GenericArraySlice<T>, source2: GenericArraySlice<T>) =
-    concat(source1, source2, destinationFactoryOf(clazz))
+    concatTmpl(source1, source2, destinationFactoryOf(clazz))
 
 fun <T> concat(clazz: Class<T>, source1: GenericArraySlice<T>, source2: GenericArraySlice<T>, vararg sourceN: GenericArraySlice<T>) =
-    concat(source1, source2, destinationFactoryOf(clazz))
+    concatTmpl(source1, source2, sourceN, destinationFactoryOf(clazz))
 
-fun <T> concat(clazz: Class<T>, sources: Collection<GenericArraySlice<T>>) = concat(sources, destinationFactoryOf(clazz))
+fun <T> concat(clazz: Class<T>, sources: Collection<GenericArraySlice<T>>) = concatTmpl(sources, destinationFactoryOf(clazz))
 
 private fun <T> destinationFactoryOf(clazz: Class<T>) =
     @Suppress("UNCHECKED_CAST") { size: Int -> java.lang.reflect.Array.newInstance(clazz, size) as Array<T> }
