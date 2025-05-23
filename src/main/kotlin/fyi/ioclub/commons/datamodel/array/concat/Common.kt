@@ -19,7 +19,7 @@ package fyi.ioclub.commons.datamodel.array.concat
 import fyi.ioclub.commons.datamodel.array.slice.ArraySlice
 
 /** @param A array type. */
-internal inline fun <A : Any> concat(
+internal inline fun <A : Any> concatTmpl(
     source1: ArraySlice<A>,
     source2: ArraySlice<A>,
     destinationFactory: (Int) -> A,
@@ -33,18 +33,32 @@ internal inline fun <A : Any> concat(
 }
 
 /** @param A array type. */
-internal inline fun <A : Any> concat(
+internal inline fun <A : Any> concatTmpl(
     source1: ArraySlice<A>,
     source2: ArraySlice<A>,
     otherSources: Array<out ArraySlice<A>>,
     destinationFactory: (Int) -> A,
-) = if (otherSources.isEmpty()) concat(source1, source2, destinationFactory)
-else concat(listOf(source1, source2, *otherSources), destinationFactory)
+) = if (otherSources.isEmpty()) concatTmpl(source1, source2, destinationFactory)
+else concatCollectionTmpl(listOf(source1, source2, *otherSources), destinationFactory)
 
 /** @param A array type. */
-internal inline fun <A : Any> concat(
+internal inline fun <A : Any> concatTmpl(
     sources: Collection<ArraySlice<A>>,
     destinationFactory: (Int) -> A,
+): A = when (sources.size) {
+    0 -> destinationFactory(0)
+    1 -> sources.iterator().next().toSlicedArray()
+    2 -> {
+        val (src1, src2) = sources.toTypedArray()
+        concatTmpl(src1, src2, destinationFactory)
+    }
+
+    else -> concatCollectionTmpl(sources, destinationFactory)
+}
+
+/** @param A array type. */
+private inline fun <A : Any> concatCollectionTmpl(
+    sources: Collection<ArraySlice<A>>, destinationFactory: (Int) -> A,
 ): A {
     val lenArr = IntArray(sources.size)
     val size = sources.foldIndexed(0) { i, lenSum, src ->

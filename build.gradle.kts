@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "fyi.ioclub"
-version = "4.2.0-SNAPSHOT"
+version = "4.2.1-SNAPSHOT"
 
 repositories {
     maven { url = uri("https://maven.aliyun.com/repository/public") }
