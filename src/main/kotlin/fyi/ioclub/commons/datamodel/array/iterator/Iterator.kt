@@ -16,6 +16,8 @@
 
 package fyi.ioclub.commons.datamodel.array.iterator
 
+import fyi.ioclub.commons.datamodel.reverse.iterateInReverse
+
 /**
  * An iterator over an array.
  *
@@ -32,3 +34,8 @@ interface ArrayIterator<T> : ListIterator<T> {
      */
     fun set(element: T)
 }
+
+fun <T> ArrayIterator<T>.iterateInReverse(): ArrayIterator<T> =
+    object : ArrayIterator<T>, ListIterator<T> by (this as ListIterator<T>).iterateInReverse() {
+        override fun set(element: T) = this@iterateInReverse.set(element)
+    }
