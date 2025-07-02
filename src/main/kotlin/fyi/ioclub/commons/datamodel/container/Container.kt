@@ -16,6 +16,7 @@
 
 package fyi.ioclub.commons.datamodel.container
 
+import fyi.ioclub.commons.datamodel.container.Container.Mutable
 import kotlin.properties.ReadOnlyProperty
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -30,15 +31,16 @@ interface Container<out T> {
 
         companion object {
 
-            fun <T> of(item: T) = object : Mutable<T> {
+            fun <T> of(item: T): Mutable<T> = object : Mutable<T>, AbstractContainerImpl() {
                 override var item = item
                 override fun toString() = "MutableContainer(item=$item)"
             }
 
-            fun <T> ofProperty(property: ReadWriteProperty<Container<T>, T>) = object : Mutable<T> {
-                override var item by property
-                override fun toString() = "MutableContainer(property=$property)"
-            }
+            fun <T> ofProperty(property: ReadWriteProperty<Container<T>, T>): Mutable<T> =
+                object : Mutable<T>, AbstractContainerImpl() {
+                    override var item by property
+                    override fun toString() = "MutableContainer(property=$property)"
+                }
 
             fun <T> ofGetterSetter(getter: () -> T, setter: (T) -> Unit) =
                 ofProperty(object : ReadWriteProperty<Container<T>, T> {
@@ -46,58 +48,98 @@ interface Container<out T> {
                     override fun setValue(thisRef: Container<T>, property: KProperty<*>, value: T) = setter(value)
                 })
 
-            fun <T> empty() = object : Mutable<T> {
-                override var item: T
+
+            fun <T> ofInitializer(initializer: () -> T): Mutable<T> = LazyContainer(initializer)
+
+            fun <T> empty(): Mutable<T> = object : LazyContainer<T>({ throw NoSuchElementException(MSG_EMPTY) }) {
+                override fun toString() = if (isEmpty) NAME_EMPTY else super.toString()
+            }
+
+            internal const val NAME_EMPTY = "EmptyMutableContainer()"
+
+            private open class LazyContainer<T>(private val initializer: () -> T) : Mutable<T> {
+
+                final override var item: T
                     get() = _item.let {
-                        if (isEmpty) throw NoSuchElementException(MSG_EMPTY)
+                        if (isEmpty) initializer().also { initial ->
+                            _item = initial
+                        }
                         else @Suppress("UNCHECKED_CAST") (it as T)
                     }
                     set(value) {
                         _item = value
                     }
-                private val isEmpty get() = _item === EmptyMark
-                private var _item: Any? = EmptyMark
-                override fun toString() = if (isEmpty) "EmptyMutableContainer()" else "MutableContainer(item=$_item)"
-            }
 
-            private object EmptyMark
+                protected val isEmpty get() = _item === EmptyMark
+
+                private var _item: Any? = EmptyMark
+
+                private object EmptyMark
+
+                override fun toString() = "MutableContainer(item=$item)"
+            }
         }
     }
 
     companion object {
 
-        fun <T> empty() = Empty
-
-        fun <T> of(item: T) = object : Container<T> {
+        fun <T> of(item: T): Container<T> = object : Container<T>, AbstractContainerImpl() {
             override val item = item
             override fun toString() = "ImmutableContainer(item=$item)"
         }
 
-        fun <T> ofProperty(property: ReadOnlyProperty<Container<T>, T>) = object : Container<T> {
-            override val item by property
-            override fun toString() = "ImmutableContainer(property=$property)"
-        }
+        fun <T> ofProperty(property: ReadOnlyProperty<Container<T>, T>): Container<T> =
+            object : Container<T>, AbstractContainerImpl() {
+                override val item by property
+                override fun toString() = "ImmutableContainer(property=$property)"
+            }
 
-        fun <T> ofGetter(getter: () -> T) = object : Container<T> {
+        fun <T> ofGetter(getter: () -> T): Container<T> = object : Container<T>, AbstractContainerImpl() {
             override val item get() = getter()
             override fun toString() = "ImmutableContainer(getter=$getter)"
         }
 
-        fun <T> ofLazy(lazy: Lazy<T>) = object : Container<T> {
-            override val item by lazy
-            override fun toString() = "ImmutableContainer(lazy=$lazy)"
+        fun <T> ofInitializer(initializer: () -> T): Container<T> = object : Container<T>, AbstractContainerImpl() {
+            override val item by lazy(LazyThreadSafetyMode.NONE, initializer)
+            override fun toString() = "ImmutableContainer(item=$item)"
         }
 
-        fun <T> ofLazy(initializer: () -> T) = ofLazy(lazy(initializer))
+        fun <T> empty() = Empty
+
+        @Deprecated(
+            message = "Use Container.ofGetter(lazy::value) instead",
+            replaceWith = ReplaceWith("Container.ofGetter"),
+            level = DeprecationLevel.WARNING,
+        )
+        fun <T> ofLazy(lazy: Lazy<T>): Container<T> = ofGetter(lazy::value)
+
+        @Deprecated(
+            message = "Use Container.ofInitializer(initializer) instead",
+            replaceWith = ReplaceWith("Container.ofInitializer"),
+            level = DeprecationLevel.WARNING,
+        )
+        fun <T> ofLazy(initializer: () -> T): Container<T> = ofInitializer(initializer)
     }
 
-    object Empty : Container<Nothing> {
+    /**
+     * Works as a placeholder.
+     *
+     * @throws NoSuchElementException for [equals] and [hashCode].
+     * Instead, use methods of [Empty.toSet] which aims for emptiable container support.
+     * @see Container.toSet
+     */
+    object Empty : Container<Nothing> by object : Container<Nothing>, AbstractContainerImpl() {
         override val item get() = throw NoSuchElementException(MSG_EMPTY)
         override fun toString() = "EmptyImmutableContainer()"
     }
 
+    private abstract class AbstractContainerImpl : Container<Any?> {
+
+        final override fun equals(other: Any?) = this === other || other is Container<*> && this.item == other.item
+        final override fun hashCode() = setOf(item).hashCode()
+    }
 }
 
 operator fun <T> Container<T>.getValue(thisRef: Any?, property: KProperty<*>): T = item
 
-operator fun <T> Container.Mutable<T>.setValue(thisRef: Any?, property: KProperty<*>, value: T) = ::item.set(value)
+operator fun <T> Mutable<T>.setValue(thisRef: Any?, property: KProperty<*>, value: T) = ::item.set(value)
